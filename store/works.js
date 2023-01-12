@@ -36,7 +36,7 @@ export const state = () => ({
     },
     {
       "id": 2,
-      "image_src": "https://picsum.photos/510/300?random",
+      "image_src": "https://picsum.photos/256/400?random",
       "title": "Welcome to Lorem",
       "content": "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, laborum ad. Ut expedita tempora autem ex rerum ipsam, repellat quia natus laudantium molestias perferendis quae! Reiciendis magnam commodi cum mollitia quidem. Cum laborum sapiente esse, voluptas quas provident, aut quos atque perspiciatis, odit maxime minus in modi illo architecto unde quasi porro consequatur totam tempora. Earum, expedita ducimus ipsum fuga necessitatibus nihil aspernatur a asperiores voluptas rem eveniet quis perspiciatis error voluptatem architecto assumenda blanditiis vero consectetur sit et doloremque! Necessitatibus ea nam praesentium architecto vel exercitationem eligendi obcaecati temporibus sunt, voluptates, tempora reiciendis totam. Id accusantium optio modi omnis?",
       "type": {

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <v-card 
     class="d-flex flex-column justify-space-between"
     color="grey darken-3"
@@ -93,6 +93,23 @@
         Lanjut Baca
       </v-btn>
     </v-card-actions>
+  </v-card>
+</template> -->
+
+<template>
+  <v-card
+    class="d-flex flex-column justify-space-between"
+    color="grey darken-4"
+    elevation="6"
+  >
+    <v-img
+      contain
+      max-height="300px"
+      :src="work.image_src"
+    >
+  
+    </v-img>
+    <v-card-title v-text="work.title.length > limit.text ? work.title.slice(0,limit.text)+'...':work.title"></v-card-title>
   </v-card>
 </template>
 

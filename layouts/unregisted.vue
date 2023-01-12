@@ -5,14 +5,6 @@
         <v-toolbar-title v-text="'Article Media'" />
       </NuxtLink>
       <v-spacer />
-      <v-text-field
-        class="mt-6"
-        append-icon="mdi-magnify"
-        label="Search"
-        solo
-        dense
-      ></v-text-field>
-      <v-spacer />
       <v-btn 
         class="mr-2"
         color="green lighten-1"
@@ -33,17 +25,15 @@
       </v-btn>
     </v-app-bar>
     <v-main>
-      <v-container>
-        <FormDialog 
-          :formTitle="formTitle"
-          :isDialogVisible="isDialogVisible"
-          :isPasswordVisible="isPasswordVisible"
-          @close="isDialogVisible = false"
-          @signIn="signIn" 
-          @isPasswordVisibleToggle="isPasswordVisible = !isPasswordVisible"
-        />
-        <Nuxt />
-      </v-container>
+      <FormDialog 
+        :formTitle="formTitle"
+        :isDialogVisible="isDialogVisible"
+        :isPasswordVisible="isPasswordVisible"
+        @close="isDialogVisible = false"
+        @signIn="signIn" 
+        @isPasswordVisibleToggle="isPasswordVisible = !isPasswordVisible"
+      />
+      <Nuxt class="mt-10" />
     </v-main>
   </v-app>
 </template>

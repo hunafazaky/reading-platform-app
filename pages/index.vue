@@ -1,18 +1,18 @@
 <template>
   <v-card>
     <v-card-text>
-      <HashtagButton />
-      <v-row class="pa-2">
+      <v-row>
         <template>
           <v-col 
-            class="pa-1"
+          class="pa-1"
             v-for="work in works"
-            :cols="(12 / cardLimit)"
             :key="work.id" 
+            md="4"
+            sm="3"
           >
             <ArticleCard
               :work="work"
-              :limit="{'text':60, 'hashtag':(Math.ceil(2 / cardLimit))}"
+              :limit="{'text':60}"
             />
           </v-col>
         </template>
@@ -22,10 +22,9 @@
 </template>
 
 <script>
-import HashtagButton from "~/components/HashtagButton.vue";
 import ArticleCard from "~/components/ArticleCard.vue";
 export default {
-  components: { HashtagButton, ArticleCard },
+  components: { ArticleCard },
   name: "IndexPage",
   layout: 'unregisted',
   data: () => ({
