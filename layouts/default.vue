@@ -20,19 +20,9 @@
         hide-details
       ></v-text-field>
       <v-list>
-        <v-tooltip 
-          v-for="(item, i) in items"
-          :key="i"
-          right
-        >
+        <v-tooltip v-for="(item, i) in items" :key="i" right>
           <template v-slot:activator="{ on, attrs }">
-            <v-list-item
-              v-bind="attrs"
-              v-on="on"
-              :to="item.to"
-              router
-              exact
-            >
+            <v-list-item v-bind="attrs" v-on="on" :to="item.to" router exact>
               <v-list-item-action>
                 <v-icon>{{ item.icon }}</v-icon>
               </v-list-item-action>
@@ -43,7 +33,7 @@
           </template>
           <span>{{ item.title }}</span>
         </v-tooltip>
-        <v-divider/>
+        <v-divider />
         <v-list-item to="/my-profile">
           <v-list-item-action>
             <v-icon>mdi-chart-bubble</v-icon>
@@ -162,15 +152,20 @@ export default {
     }
   },
   computed: {
-    height () {
+    height() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'xs': return 220
-        case 'sm': return 400
-        case 'md': return 500
-        case 'lg': return 600
-        case 'xl': return 800
+        case 'xs':
+          return 220
+        case 'sm':
+          return 400
+        case 'md':
+          return 500
+        case 'lg':
+          return 600
+        case 'xl':
+          return 800
       }
     },
-  }
+  },
 }
 </script>
