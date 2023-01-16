@@ -106,7 +106,6 @@
 <script>
   import { validationMixin } from 'vuelidate'
   import { required, maxLength, minLength, email } from 'vuelidate/lib/validators'
-  import WorkPreview from '../components/WorkPreview.vue'
 
   export default {
     layout: 'login',

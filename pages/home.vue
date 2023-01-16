@@ -1,9 +1,9 @@
 <template>
   <v-row justify="center">
-    <v-col cols="12" sm="8" md="5">
-      <WorkPreview :wordLimit="{title:100, text: 500}"/>
-      <WorkPreview :wordLimit="{title:100, text: 500}"/>
-      <WorkPreview :wordLimit="{title:100, text: 500}"/>
+    <v-col cols="10" sm="8" md="5">
+      <WorkPreview :wordLimit="{title:100, text: 500}" header="true"/>
+      <WorkPreview :wordLimit="{title:100, text: 500}" header="true"/>
+      <WorkPreview :wordLimit="{title:100, text: 500}" header="true"/>
     </v-col>
     <v-col cols="12" sm="8" md="5">
       <v-card>

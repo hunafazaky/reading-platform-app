@@ -1,11 +1,15 @@
 <template>
   <v-app dark>
     <v-navigation-drawer
+      :permanent="height > 400"
+      :mini-variant="height <= 500"
       fixed
       app
     >
-      <h1 class="text-center ma-5">Reading App</h1>
+      <h1 v-if="height > 500" class="text-center ma-5">Reading App</h1>
+      <h1 v-else class="text-center ma-5">R</h1>
       <v-text-field
+        v-if="height > 500"
         class="ma-2"
         solo
         dense
@@ -16,20 +20,30 @@
         hide-details
       ></v-text-field>
       <v-list>
-        <v-list-item
+        <v-tooltip 
           v-for="(item, i) in items"
           :key="i"
-          :to="item.to"
-          router
-          exact
+          right
         >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+          <template v-slot:activator="{ on, attrs }">
+            <v-list-item
+              v-bind="attrs"
+              v-on="on"
+              :to="item.to"
+              router
+              exact
+            >
+              <v-list-item-action>
+                <v-icon>{{ item.icon }}</v-icon>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item-title>{{ item.title }}</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+          <span>{{ item.title }}</span>
+        </v-tooltip>
+        <v-divider/>
         <v-list-item to="/my-profile">
           <v-list-item-action>
             <v-icon>mdi-chart-bubble</v-icon>
@@ -48,7 +62,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-navigation-drawer 
+    <!-- <v-navigation-drawer 
       v-model="rightDrawer"
       temporary 
       fixed
@@ -71,11 +85,11 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <v-app-bar v-if="height <= 500" fixed app>
-      <v-btn icon @click.stop="rightDrawer = !rightDrawer">
+      <!-- <v-btn icon @click.stop="rightDrawer = !rightDrawer">
         <v-icon>mdi-menu</v-icon>
-      </v-btn>
+      </v-btn> -->
       <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> -->
       <!-- <v-btn icon @click.stop="miniVariant = !miniVariant">
         <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
@@ -102,7 +116,7 @@
         <Nuxt />
       </v-container>
     </v-main>
-    <v-footer absolute app>
+    <v-footer :absolute="height > 400" :fixed="height <= 400" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
@@ -131,12 +145,12 @@ export default {
           to: '/my-bookshelf',
         },
         {
-          icon: 'mdi-book-heart',
+          icon: 'mdi-account-box-multiple',
           title: 'Penulis Favorit',
           to: '/my-favorite',
         },
         {
-          icon: 'mdi-note-plus',
+          icon: 'mdi-text-box-plus',
           title: 'Tulis Sesuatu',
           to: '/write',
         },
