@@ -2,15 +2,15 @@
   <v-row justify="center">
     <v-col cols="10" sm="6" md="5">
       <WorkPreview
-        :wordLimit="{ title: 100, text: 500 }"
+        :wordLimit="{ title: 100, text: 200 }"
         :miniVariant="false"
       />
       <WorkPreview
-        :wordLimit="{ title: 100, text: 500 }"
+        :wordLimit="{ title: 100, text: 200 }"
         :miniVariant="false"
       />
       <WorkPreview
-        :wordLimit="{ title: 100, text: 500 }"
+        :wordLimit="{ title: 100, text: 200 }"
         :miniVariant="false"
       />
     </v-col>

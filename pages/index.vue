@@ -83,16 +83,16 @@
         </v-card>
         <span v-if="form.title == 'Registrasi'" class="caption text--secondary"
           >Sudah punya akun?
-          <a class="text-decoration-none" @click.prevent="openLoginForm"
-            >Login</a
+          <span class="text-decoration-none" @click.prevent="openLoginForm"
+            >Login</span
           >
         </span>
         <span v-if="form.title == 'Login'" class="caption text--secondary"
           >Belum punya akun?
-          <a
+          <span
             class="text-decoration-none success--text"
             @click.prevent="openRegisForm"
-            >Registrasi</a
+            >Registrasi</span
           >
         </span>
       </v-col>
@@ -197,6 +197,10 @@ export default {
       this.form.title = 'Registrasi'
     },
     login() {
+      this.$v.$touch()
+      this.$router.push('/home')
+    },
+    regis() {
       this.$v.$touch()
       this.$router.push('/home')
     },
