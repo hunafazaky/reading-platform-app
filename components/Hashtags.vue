@@ -1,5 +1,6 @@
 <template>
   <v-slide-group
+    active-class="secondary"
     prev-icon="mdi-arrow-left-bold-box"
     next-icon="mdi-arrow-right-bold-box"
     show-arrows

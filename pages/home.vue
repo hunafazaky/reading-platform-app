@@ -2,14 +2,18 @@
   <v-row justify="center">
     <v-col cols="10" sm="6" md="5">
       <WorkPreview
+        class="mx-auto"
         :wordLimit="{ title: 100, text: 200 }"
         :miniVariant="false"
       />
       <WorkPreview
+        class="mx-auto"
         :wordLimit="{ title: 100, text: 200 }"
         :miniVariant="false"
+        img_src="/cover.jpg"
       />
       <WorkPreview
+        class="mx-auto"
         :wordLimit="{ title: 100, text: 200 }"
         :miniVariant="false"
       />

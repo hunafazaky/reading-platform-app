@@ -179,11 +179,23 @@ export default {
 </script>
 
 <style lang="css">
+.relative {
+  position: relative;
+}
 .absolute {
   position: absolute;
 }
 .bottom {
   bottom: 16px;
+}
+.dashed-border {
+  border: 1px dashed #212122;
+}
+.h-100 {
+  height: 100%;
+}
+.w-100 {
+  width: 100%;
 }
 </style>
 
