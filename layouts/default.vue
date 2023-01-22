@@ -42,32 +42,24 @@
           <span>{{ item.title }}</span>
         </v-tooltip>
         <v-divider />
-        <v-tooltip :disabled="height > 500" right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-list-item v-bind="attrs" v-on="on" to="/profile" router exact>
-              <v-list-item-action>
-                <v-icon>mdi-chart-bubble</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>Profil</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <span>Profil</span>
-        </v-tooltip>
-        <v-tooltip :disabled="height > 500" right>
-          <template v-slot:activator="{ on, attrs }">
-            <v-list-item v-bind="attrs" v-on="on" to="/setting" router exact>
-              <v-list-item-action>
-                <v-icon>mdi-cog</v-icon>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title>Pengaturan</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-          <span>Pengaturan</span>
-        </v-tooltip>
+        <template v-if="height > 500">
+          <v-list-item v-bind="attrs" v-on="on" to="/profile" router exact>
+            <v-list-item-action>
+              <v-icon>mdi-account-circle</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Profil</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item v-bind="attrs" v-on="on" to="/setting" router exact>
+            <v-list-item-action>
+              <v-icon>mdi-cog</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title>Pengaturan</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </template>
       </v-list>
     </v-navigation-drawer>
 
@@ -84,7 +76,27 @@
         hide-details
       ></v-text-field>
       <v-spacer />
-      <v-toolbar-title>{{ title }}</v-toolbar-title>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon size="24px"> mdi-account-circle </v-icon>
+          </v-btn>
+        </template>
+        <v-list dark>
+          <v-list-item to="/profile" router exact>
+            <v-list-item-title>
+              <v-icon small left>mdi-account-circle</v-icon>
+              Profile</v-list-item-title
+            >
+          </v-list-item>
+          <v-list-item to="/config" router exact>
+            <v-list-item-title>
+              <v-icon small left>mdi-cog</v-icon>
+              Pengaturan</v-list-item-title
+            >
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-app-bar>
 
     <v-main class="mb-10">
@@ -96,24 +108,19 @@
     <v-footer v-if="height <= 400" dark fixed app padless>
       <v-card flat tile width="100%" class="text-center">
         <v-card-text>
-          <v-tooltip v-for="(item, i) in items" :key="i" top>
-            <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                v-bind="attrs"
-                v-on="on"
-                :to="item.to"
-                router
-                exact
-                class="mx-4"
-                icon
-              >
-                <v-icon size="24px">
-                  {{ item.icon }}
-                </v-icon>
-              </v-btn>
-            </template>
-            <span>{{ item.title }}</span>
-          </v-tooltip>
+          <v-btn
+            v-for="(item, i) in items"
+            :key="i"
+            :to="item.to"
+            router
+            exact
+            class="mx-4"
+            icon
+          >
+            <v-icon size="24px">
+              {{ item.icon }}
+            </v-icon>
+          </v-btn>
         </v-card-text>
       </v-card>
     </v-footer>

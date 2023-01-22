@@ -10,14 +10,23 @@
                 rounded="lg"
                 width="100%"
                 class="overflow-hidden"
-                style="padding-top: 160%; position: relative;"
+                :style="{
+                  'padding-top': 100 * (19 / 13) + '%',
+                  position: 'relative',
+                }"
               >
-                <v-img style="inset: 0; position: absolute;" v-if="file" height="100%" cover :src="imagePreview"></v-img>
-                <v-icon style="inset: 0; position: absolute;" v-else>
-                  mdi-image-album
+                <v-img
+                  style="inset: 0; position: absolute"
+                  v-if="file"
+                  height="100%"
+                  cover
+                  :src="imagePreview"
+                ></v-img>
+                <v-icon style="inset: 0; position: absolute" v-else x-large>
+                  mdi-plus-box
                 </v-icon>
               </v-sheet>
-              <p class="caption text--secondary">Preview</p>
+              <p class="caption text--secondary text-center">Preview</p>
             </v-col>
             <v-col cols="8" md="9">
               <v-text-field
@@ -25,42 +34,50 @@
                 dense
                 v-model="title"
                 label="Judul"
+                hint="Pilih judul yang sesuai dan menarik pembaca"
+                persistent-hint
               ></v-text-field>
-              <v-radio-group
-                class="my-0"
-                v-model="radios"
-                row mandatory
-              >
+              <v-radio-group class="my-0" v-model="radios" row mandatory>
                 <v-radio
                   label="Non-Fiksi"
                   value="non-fiction"
-                  color="warning"
+                  off-icon="mdi-pound-box"
+                  on-icon="mdi-pound-box"
+                  color="error"
                 ></v-radio>
                 <v-radio
                   label="Fiksi"
                   value="fiction"
-                  color="error"
+                  off-icon="mdi-pound-box"
+                  on-icon="mdi-pound-box"
+                  color="purple"
                 ></v-radio>
               </v-radio-group>
-              <v-select
+              <v-autocomplete
                 outlined
-                dense multiple hide-selected small-chips deletable-chips clearable
-                hint="Pilih Kategori yang Sesuai"
+                dense
+                multiple
+                hide-selected
+                small-chips
+                deletable-chips
+                clearable
+                hint="Pilih (max. 5) kategori yang paling sesuai"
+                :counter="5"
                 persistent-hint
                 v-model="select"
-                :items="radios === 'fiction' ? fictionItems:nonFictionItems"
+                :items="items"
                 label="Kategori"
-              ></v-select>
+              ></v-autocomplete>
               <v-file-input
                 prepend-icon=""
-                prepend-inner-icon="mdi-plus"
+                append-outer-icon="mdi-image-plus"
                 outlined
                 dense
                 clearable
                 show-size
                 truncate-length="25"
-                label="Kover"
-                hint="Direkomendasikan kover dengan ratio 1:1.6"
+                label="Cover"
+                hint="Direkomendasikan cover dengan ratio 13:19"
                 persistent-hint
                 v-model="file"
                 @change="fileToImage"
@@ -81,8 +98,12 @@
           </v-row>
         </v-card-text>
         <v-card-actions>
-          <v-btn small color="primary" @click="upload"> upload </v-btn>
-          <v-btn small color="secondary" @click="clear"> clear </v-btn>
+          <v-btn class="mx-2 px-4" color="primary" @click="openDialog">
+            upload
+          </v-btn>
+          <v-btn class="mx-2 px-4" outlined color="secondary" @click="clear">
+            clear
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -90,7 +111,7 @@
 </template>
 
 <script>
-import WorkPreview from '../components/WorkPreview.vue'
+import Dialog from '../components/Dialog.vue'
 
 export default {
   layout: 'default',
@@ -100,10 +121,25 @@ export default {
     select: null,
     file: null,
     imagePreview: null,
-    nonFictionItems: ['Teknologi', 'Sains', 'Sejarah', 'Ekonomi', 'Sosial', 'Budaya', 'Agama', 'Politik', 'Olahraga', ],
-    fictionItems: ['Aksi', 'Romansa', 'Fiksi Ilmiah', 'Fantasi', 'Horor', 'Drama'],
+    items: [
+      'Teknologi',
+      'Sains',
+      'Sejarah',
+      'Ekonomi',
+      'Sosial',
+      'Budaya',
+      'Agama',
+      'Politik',
+      'Olahraga',
+      'Aksi',
+      'Romansa',
+      'Fiksi Ilmiah',
+      'Fantasi',
+      'Horor',
+      'Drama',
+    ],
+    dialogState: false,
   }),
-
   computed: {
     height() {
       switch (this.$vuetify.breakpoint.name) {
@@ -120,7 +156,6 @@ export default {
       }
     },
   },
-
   methods: {
     upload() {
       this.$v.$touch()
@@ -135,9 +170,13 @@ export default {
     },
     fileToImage() {
       if (this.file) {
-        this.imagePreview= URL.createObjectURL(this.file)
+        this.imagePreview = URL.createObjectURL(this.file)
       }
-    }
+    },
+    openDialog() {
+      this.dialogState = true
+    },
   },
+  components: { Dialog },
 }
 </script>

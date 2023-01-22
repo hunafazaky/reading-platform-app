@@ -15,7 +15,7 @@
                 class="mx-2"
                 :wordLimit="{ title: 100, text: 0 }"
                 :miniVariant="true"
-                width="150px"
+                :size="{ numbers: 150, units: 'px' }"
               />
             </v-slide-item>
           </v-slide-group>
@@ -35,7 +35,7 @@
                 class="mx-2"
                 :wordLimit="{ title: 100, text: 0 }"
                 :miniVariant="true"
-                width="150px"
+                :size="{ numbers: 150, units: 'px' }"
               />
             </v-slide-item>
           </v-slide-group>
