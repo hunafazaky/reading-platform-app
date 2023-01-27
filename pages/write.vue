@@ -86,24 +86,40 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <!-- <TextBox theme="snow" toolbar="minimal" /> -->
-              <TextBox
+              <client-only>
+                <tiptap-editor v-model="content"/>
+              </client-only>
+              <div class="content">
+                <h3>Content</h3>
+                <pre><code>{{ content }}</code></pre>
+              </div>
+              <div class="content">
+                <h3>Content</h3>
+                <p v-html="content"></p>
+              </div>
+              <!-- <v-sheet outlined class="py-4" rounded="lg">
+                <div id="codex-editor"/>
+              </v-sheet>
+              <v-btn type="button" name="button" @click="save()">save</v-btn>
+              <div v-if="value">
+                <template v-for="val in value.blocks">
+                  <p v-if="val.data.text" v-html="val.data.text"></p>
+                  <p v-if="val.data.items">
+                    <ul v-for="item in val.data.items">
+                      <li v-html="item"></li>
+                    </ul>
+                  </p>
+                </template>
+              </div> -->
+              
+              <!-- <TextBox
                 ref="myQuillEditor"
                 v-model="content"
                 :options="editorOption"
                 @blur="onEditorBlur($event)"
                 @focus="onEditorFocus($event)"
                 @ready="onEditorReady($event)"
-              />
-              <!-- <v-textarea
-                rows="5"
-                row-height="40"
-                auto-grow
-                outlined
-                name="content"
-                label="Konten"
-                v-model="text"
-              ></v-textarea> -->
+              /> -->
             </v-col>
           </v-row>
         </v-card-text>
@@ -117,20 +133,12 @@
 
 <script>
 import Dialog from '../components/Dialog.vue'
-import 'quill/dist/quill.core.css'
-import 'quill/dist/quill.snow.css'
-import 'quill/dist/quill.bubble.css'
-
-import { quillEditor as TextBox } from 'vue-quill-editor'
-
+import TiptapEditor from '~/components/TiptapEditor.vue'
 
 export default {
   layout: 'default',
   data: () => ({
-    content: '<h2>I am Example</h2><br><br>To the best!!!',
-    editorOption: {
-      // Some Quill options...
-    },
+    content: '<p>A Vue.js wrapper component for tiptap to use <code>v-model</code>.</p>',
     radios: 'non-fiction',
     title: null,
     text: null,
@@ -156,9 +164,6 @@ export default {
     ],
   }),
   computed: {
-    editor() {
-      return this.$refs.myQuillEditor.quill
-    },
     height() {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs':
@@ -175,19 +180,6 @@ export default {
     },
   },
   methods: {
-    onEditorBlur(quill) {
-      console.log('editor blur!', quill)
-    },
-    onEditorFocus(quill) {
-      console.log('editor focus!', quill)
-    },
-    onEditorReady(quill) {
-      console.log('editor ready!', quill)
-    },
-    onEditorChange({ quill, html, text }) {
-      console.log('editor change!', quill, html, text)
-      this.content = html
-    },
     upload() {
       this.$v.$touch()
       // this.$router.push('/home')
@@ -205,6 +197,6 @@ export default {
       }
     },
   },
-  components: { Dialog, TextBox },
+  components: { Dialog, TiptapEditor },
 }
 </script>
