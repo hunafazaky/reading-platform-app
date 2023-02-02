@@ -20,7 +20,7 @@
                   v-if="file"
                   height="100%"
                   cover
-                  :src="post.image_cover"
+                  :src="work.image_cover"
                 ></v-img>
                 <v-icon v-else style="inset: 0; position: absolute" x-large>
                   mdi-plus-box
@@ -29,7 +29,7 @@
               <p class="caption text--secondary text-center">Preview</p>
             </v-col>
             <v-col cols="8" md="9">
-              <v-radio-group class="my-0" v-model="post.type" mandatory>
+              <v-radio-group class="my-0" v-model="work.type" mandatory>
                 <template v-slot:label>
                   <div>Pilih jenis Karya Tulis</div>
                 </template>
@@ -62,7 +62,7 @@
                 hint="Pilih judul yang sesuai dan menarik pembaca"
                 persistent-hint
                 required
-                v-model="post.title"
+                v-model="work.title"
               ></v-text-field>
               <v-autocomplete
                 outlined
@@ -77,7 +77,7 @@
                 persistent-hint
                 :counter="5"
                 :items="hashtags"
-                v-model="post.hashtags"
+                v-model="work.hashtags"
               ></v-autocomplete>
               <v-file-input
                 outlined
@@ -99,7 +99,7 @@
             <v-col cols="12">
               <div>Tulis karyamu di kotak ini</div>
               <client-only>
-                <tiptap-editor v-model="post.text" />
+                <tiptap-editor v-model="work.text" />
               </client-only>
               <!-- <v-sheet outlined class="py-4" rounded="lg">
                 <div id="codex-editor"/>
@@ -131,8 +131,8 @@
           <v-btn
             class="ma-2 px-4"
             color="success"
-            :disabled="!post.title || !post.text"
-            @click="addPost"
+            :disabled="!work.title || !work.text"
+            @click="addWork"
           >
             Unggah
           </v-btn>
@@ -158,7 +158,7 @@ export default {
   data: () => ({
     file: null,
     success: false,
-    post: {
+    work: {
       image_cover: null,
       title: null,
       text: null,
@@ -196,14 +196,14 @@ export default {
     },
   },
   methods: {
-    addPost() {
+    addWork() {
       // this.success = false;
-      this.post.id = Math.random()
-      if (this.post.image_cover === null)
-        this.post.image_cover = '/temp-profile.webp'
-      this.$store.commit('posts/add', this.post)
+      this.work.id = Math.random()
+      if (this.work.image_cover === null)
+        this.work.image_cover = '/temp-profile.webp'
+      this.$store.commit('works/add', this.work)
       this.file = null
-      this.post = {
+      this.work = {
         image_cover: null,
         title: null,
         text: null,
@@ -223,7 +223,7 @@ export default {
     },
     fileToImage() {
       if (this.file) {
-        this.post.image_cover = URL.createObjectURL(this.file)
+        this.work.image_cover = URL.createObjectURL(this.file)
       }
     },
   },

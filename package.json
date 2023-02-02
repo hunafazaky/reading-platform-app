@@ -1,7 +1,9 @@
 {
-  "name": "reading-platform",
+  "name": "app-reading",
   "version": "1.0.0",
   "private": true,
+  "author": "hunafazaky",
+  "license": "MIT",
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",

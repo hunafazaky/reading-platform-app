@@ -80,7 +80,7 @@
               md="3"
               xl="2"
             >
-              <PostCard
+              <WorkCard
                 :post="post"
                 :wordLimit="{ title: 100, text: 0 }"
                 :miniVariant="true"
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import PostCard from '../../../components/PostCard.vue'
+import WorkCard from '../../../components/WorkCard.vue'
 import PopZoom from '../../../components/PopZoom.vue'
 import { mapMutations } from 'vuex'
 

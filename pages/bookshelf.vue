@@ -1,17 +1,17 @@
 <template>
-  <v-row :justify="posts.length > 0 ? 'start' : 'center'" class="px-4 py-1">
-    <template v-if="posts.length > 0">
+  <v-row :justify="works.length > 0 ? 'start' : 'center'" class="px-4 py-1">
+    <template v-if="works.length > 0">
       <v-col
-        v-for="post in posts"
-        :key="post.id"
+        v-for="work in works"
+        :key="work.id"
         class="px-1 py-0"
         cols="4"
         sm="4"
         md="3"
         xl="2"
       >
-        <PostCard
-          :post="post"
+        <WorkCard
+          :work="work"
           :wordLimit="{ title: 100, text: 0 }"
           :miniVariant="true"
         />
@@ -24,15 +24,15 @@
 </template>
 
 <script>
-import PostCard from '../components/PostCard.vue'
+import WorkCard from '../components/WorkCard.vue'
 import { mapMutations } from 'vuex'
 
 export default {
   name: 'Bookshelf',
   data: () => ({}),
   computed: {
-    posts() {
-      return this.$store.state.posts.data
+    works() {
+      return this.$store.state.works.data
     },
   },
   methods: {
@@ -47,7 +47,7 @@ export default {
     }),
   },
   components: {
-    PostCard,
+    WorkCard,
   },
 }
 </script>

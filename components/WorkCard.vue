@@ -19,38 +19,40 @@
     >
       <v-img
         height="100%"
-        :src="post.image_cover"
+        :src="work.content.img_cover"
         gradient="to top, rgba(12.9, 12.9, 12.9, .25), rgba(12.9, 12.9, 12.9, 1)"
       >
         <!-- <v-card-actions v-if="miniVariant === true" class="ma-0 pa-0 mx-4 mt-2">
           <v-icon
-            :class="post.type === 'Fiksi' ? 'purple--text' : 'error--text'"
+            :class="work.type === 'Fiksi' ? 'purple--text' : 'error--text'"
             small
             left
           >
             mdi-pound-box
           </v-icon>
-          <span class="overline text-truncate" v-text="post.type"></span>
+          <span class="overline text-truncate" v-text="work.type"></span>
         </v-card-actions> -->
         <v-card-actions
           v-if="miniVariant === false"
           class="d-flex align-center pa-4"
         >
           <nuxt-link
-            :to="`/user/${writer.account.username}`"
+            :to="`/user/${work.activity.written_by.username}`"
             class="text-decoration-none white--text text-truncate"
           >
             <v-avatar class="mr-1" color="white" size="28">
-              <v-img :src="writer.profile.image_profile"></v-img>
+              <v-img :src="work.activity.written_by.img_profile"></v-img>
             </v-avatar>
             <span
               class="font-weight-bold text-truncate"
-              v-text="writer.profile.name"
+              v-text="work.activity.written_by.pen_name"
             ></span>
           </nuxt-link>
           <v-spacer></v-spacer>
           <v-icon
-            :class="post.type === 'Fiksi' ? 'purple--text' : 'error--text'"
+            :class="
+              work.keyword.type === 'Fiksi' ? 'purple--text' : 'error--text'
+            "
           >
             mdi-pound-box
           </v-icon>
@@ -59,18 +61,18 @@
           class="title text-capitalize"
           :class="miniVariant === true ? 'caption' : ''"
           v-text="
-            post.title.length > wordLimit.title
-              ? post.title.slice(0, wordLimit.title) + '...'
-              : post.title
+            work.content.title.length > wordLimit.title
+              ? work.content.title.slice(0, wordLimit.title) + '...'
+              : work.content.title
           "
         ></v-card-text>
         <v-card-text
           v-if="miniVariant === false"
           class="text-caption"
           v-html="
-            post.text.length > wordLimit.text
-              ? post.text.slice(0, wordLimit.text) + '...'
-              : post.text
+            work.content.text.length > wordLimit.text
+              ? work.content.text.slice(0, wordLimit.text) + '...'
+              : work.content.text
           "
         >
         </v-card-text>
@@ -84,7 +86,7 @@
               class="mb-1"
               color="success"
               nuxt
-              :to="`/post/${post.id}/read`"
+              :to="`/work/${work.id}/read`"
             >
               <v-icon> mdi-text-box-search </v-icon>
             </v-btn>
@@ -93,11 +95,11 @@
               class="mb-1"
               color="warning"
               nuxt
-              :to="`/post/${post.id}/edit`"
+              :to="`/work/${work.id}/edit`"
             >
               <v-icon> mdi-text-box-edit </v-icon>
             </v-btn>
-            <v-btn icon class="mb-1" color="error" @click="removePost(post)">
+            <v-btn icon class="mb-1" color="error" @click="removeWork(work)">
               <v-icon> mdi-text-box-remove </v-icon>
             </v-btn>
           </div>
@@ -106,7 +108,7 @@
               <v-icon left> mdi-text-box-check </v-icon>
               simpan
             </v-btn>
-            <v-btn small color="success" nuxt :to="`/post/${post.id}/read`">
+            <v-btn small color="success" nuxt :to="`/work/${work.id}/read`">
               <v-icon left> mdi-text-box-search </v-icon>
               lanjut baca
             </v-btn>
@@ -119,9 +121,9 @@
 
 <script>
 export default {
-  name: 'PostCard',
+  name: 'WorkCard',
   props: {
-    post: Object,
+    work: Object,
     wordLimit: Object,
     miniVariant: Boolean,
     size: {
@@ -138,13 +140,13 @@ export default {
   computed: {
     writer() {
       return this.$store.state.users.data.find(
-        (user) => user.id === this.post.writer_id
+        (user) => user.id === this.work.writer_id
       )
     },
   },
   methods: {
-    removePost(post) {
-      this.$store.commit('posts/remove', post)
+    removeWork(work) {
+      this.$store.commit('works/remove', work)
     },
   },
 }

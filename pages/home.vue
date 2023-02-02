@@ -1,12 +1,12 @@
 <template>
   <v-row justify="center">
     <v-col cols="10" sm="6" md="5">
-      <template v-if="posts.length > 0">
-        <PostCard
-          v-for="post in posts"
-          :key="post.id"
+      <template v-if="works.length > 0">
+        <WorkCard
+          v-for="work in works"
+          :key="work.id"
           class="mx-auto"
-          :post="post"
+          :work="work"
           :wordLimit="{ title: 150, text: 400 }"
           :miniVariant="false"
         />
@@ -22,18 +22,20 @@
 </template>
 
 <script>
-import PostCard from '../components/PostCard.vue'
+import WorkCard from '../components/WorkCard.vue'
 import SideCard from '../components/SideCard.vue'
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'Home',
-  data: () => ({}),
-  computed: {
-    posts() {
-      return this.$store.state.posts.data
-    },
+  async asyncData({ $axios, $config }) {
+    const works = await $axios.$get(`/works`)
+    return { works }
   },
+  name: 'Home',
+  data: () => ({
+    works: {},
+  }),
+  computed: {},
   methods: {
     addTodo(e) {
       console.log(e.target.value)
@@ -44,9 +46,21 @@ export default {
     ...mapMutations({
       toggle: 'todos/toggle',
     }),
+    // getAllWorks() {
+    //   this.$store.dispatch('works/getAllWorks');
+    //   this.works = this.$store.state.works.data;
+    // }
+    // async asyncData({ $axios, $config }) {
+    //   const works = await $axios.$get(`/works`)
+    //   return { works }
+    // }
   },
   components: {
-    PostCard,
+    WorkCard,
+  },
+  mounted() {
+    // this.getAllWorks();
+    // this.asyncData();
   },
 }
 </script>

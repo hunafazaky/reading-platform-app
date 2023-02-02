@@ -2,16 +2,16 @@
   <v-row justify="space-between">
     <PopZoom
       maxWidth="500px"
-      :image="post.image_cover"
+      :image="work.content.img_cover"
       :showPopZoom="showPopZoom"
       @hidePopZoom="showPopZoom = false"
     />
     <v-col class="my-5" cols="12" md="7">
       <h1
         class="headline font-weight-medium text--secondary"
-        v-text="post.title"
+        v-text="work.content.title"
       ></h1>
-      <p class="subtitle-1 my-5" v-html="post.text"></p>
+      <p class="subtitle-1 my-5" v-html="work.content.text"></p>
     </v-col>
     <v-col class="my-5" cols="12" md="4">
       <v-card rounded="lg" outlined>
@@ -33,7 +33,7 @@
                   style="inset: 0; position: absolute"
                   height="100%"
                   cover
-                  :src="post.image_cover"
+                  :src="work.content.img_cover"
                 ></v-img>
               </v-sheet>
             </v-col>
@@ -41,12 +41,12 @@
               <div class="my-5">
                 <p class="caption font-weight-bold my-0">Penulis :</p>
                 <nuxt-link
-                  :to="`../../user/${writer(post.writer_id).account.username}`"
+                  :to="`../../user/${work.activity.written_by.username}`"
                   class="text-decoration-none"
                 >
                   <div
                     class="caption text-truncate text-capitalize font-weight-medium"
-                    v-text="writer(post.writer_id).profile.name"
+                    v-text="work.activity.written_by.pen_name"
                   ></div>
                 </nuxt-link>
               </div>
@@ -55,15 +55,20 @@
                 <v-icon
                   class="mx-0"
                   :class="
-                    post.type === 'Fiksi' ? 'purple--text' : 'error--text'
+                    work.keyword.type === 'Fiksi'
+                      ? 'purple--text'
+                      : 'error--text'
                   "
                   left
                 >
                   mdi-pound-box
                 </v-icon>
-                <span class="overline text-truncate" v-text="post.type"></span>
+                <span
+                  class="overline text-truncate"
+                  v-text="work.keyword.type"
+                ></span>
               </div>
-              <div class="my-5" v-if="post.hashtags.length > 0">
+              <div class="my-5" v-if="work.keyword.hashtags.length > 0">
                 <p class="caption font-weight-bold my-0">Tagar :</p>
                 <v-chip-group column class="mb-4">
                   <v-chip
@@ -71,7 +76,7 @@
                     small
                     color="grey darken-4"
                     class="font-weight-medium white--text"
-                    v-for="hashtag in post.hashtags"
+                    v-for="hashtag in work.keyword.hashtags"
                     :key="hashtag"
                   >
                     <v-icon small left>mdi-pound</v-icon>
@@ -91,6 +96,10 @@
 import PopZoom from '../../../components/PopZoom.vue'
 
 export default {
+  async asyncData({ $axios, $config }) {
+    const work = await $axios.$get(`/works/63da9c365b863a980993e50f`)
+    return { work }
+  },
   name: 'Read',
   data: () => ({
     showPopZoom: false,
@@ -110,11 +119,11 @@ export default {
           return 800
       }
     },
-    post() {
-      return this.$store.state.posts.data.find(
-        (post) => post.id == this.$route.params.id
-      )
-    },
+    // work() {
+    //   return this.$store.state.works.data.find(
+    //     (work) => work.id == this.$route.params.id
+    //   )
+    // },
   },
   methods: {
     hashtag(id) {
