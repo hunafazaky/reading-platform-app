@@ -96,8 +96,8 @@
 import PopZoom from '../../../components/PopZoom.vue'
 
 export default {
-  async asyncData({ $axios, $config }) {
-    const work = await $axios.$get(`/works/63da9c365b863a980993e50f`)
+  async asyncData({ params, $axios }) {
+    const work = await $axios.$get(`/works/${params.id}`)
     return { work }
   },
   name: 'Read',

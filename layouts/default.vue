@@ -46,15 +46,19 @@
           <v-list-item
             v-bind="attrs"
             v-on="on"
-            to="/user/hunafazaky"
+            :to="`/user/${me.user.account.username}`"
             router
             exact
           >
             <v-list-item-action>
-              <v-icon>mdi-account-circle</v-icon>
+              <v-avatar color="white" size="24">
+                <v-img :src="me.user.profile.img_profile"></v-img>
+              </v-avatar>
             </v-list-item-action>
             <v-list-item-content>
-              <v-list-item-title>Profil</v-list-item-title>
+              <v-list-item-title
+                v-text="me.user.account.username"
+              ></v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item v-bind="attrs" v-on="on" to="/setting" router exact>
@@ -84,11 +88,13 @@
       <v-menu offset-y>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
-            <v-icon size="24px"> mdi-account-circle </v-icon>
+            <v-avatar class="mr-1" color="white" size="24">
+              <v-img :src="me.user.profile.img_profile"></v-img>
+            </v-avatar>
           </v-btn>
         </template>
         <v-list dark>
-          <v-list-item to="/user/hunafazaky" router exact>
+          <v-list-item :to="`/user/${me.user.account.username}`" router exact>
             <v-list-item-title>
               <v-icon small left>mdi-account-circle</v-icon>
               Profile</v-list-item-title
@@ -165,6 +171,11 @@ export default {
     }
   },
   computed: {
+    me() {
+      const user = this.$store.state.users.me
+      console.log(user)
+      return user
+    },
     height() {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs':

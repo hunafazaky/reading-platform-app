@@ -17,10 +17,10 @@
               >
                 <v-img
                   style="inset: 0; position: absolute"
-                  v-if="work.image_cover"
+                  v-if="work.content.img_cover"
                   height="100%"
                   cover
-                  :src="work.image_cover"
+                  :src="work.content.img_cover"
                 ></v-img>
                 <v-icon v-else style="inset: 0; position: absolute" x-large>
                   mdi-plus-box
@@ -29,7 +29,7 @@
               <p class="caption text--secondary text-center">Preview</p>
             </v-col>
             <v-col cols="8" md="9">
-              <v-radio-group class="my-0" v-model="work.type" mandatory>
+              <v-radio-group class="my-0" v-model="work.keyword.type" mandatory>
                 <template v-slot:label>
                   <div>Pilih jenis Karya Tulis</div>
                 </template>
@@ -62,7 +62,7 @@
                 hint="Pilih judul yang sesuai dan menarik pembaca"
                 persistent-hint
                 required
-                v-model="work.title"
+                v-model="work.content.title"
               ></v-text-field>
               <v-autocomplete
                 outlined
@@ -77,7 +77,7 @@
                 persistent-hint
                 :counter="5"
                 :items="hashtags"
-                v-model="work.hashtags"
+                v-model="work.keyword.hashtags"
               ></v-autocomplete>
               <v-file-input
                 outlined
@@ -99,7 +99,7 @@
             <v-col cols="12">
               <div>Tulis karyamu di kotak ini</div>
               <client-only>
-                <tiptap-editor v-model="work.text" />
+                <tiptap-editor v-model="work.content.text" />
               </client-only>
             </v-col>
           </v-row>
@@ -108,8 +108,8 @@
           <v-btn
             class="ma-2 px-4"
             color="success"
-            :disabled="!work.title || !work.text"
-            @click="editWork"
+            :disabled="!work.content.title || !work.content.text"
+            @click="putWork"
           >
             Update
           </v-btn>
@@ -131,24 +131,15 @@
 import TiptapEditor from '~/components/TiptapEditor.vue'
 
 export default {
+  async asyncData({ params, $axios }) {
+    const work = await $axios.$get(`/works/${params.id}`)
+    return { work }
+  },
   name: 'Edit',
   data: () => ({
     file: null,
     success: false,
-    work: {},
-    // work: {
-    //   image_cover: null,
-    //   title: null,
-    //   text: null,
-    //   type: 'Fiksi',
-    //   hashtags: [],
-    //   writer_id: 1,
-    //   reader_id: [],
-    //   favorite_count: null,
-    //   bookshelf_count: null,
-    //   created_at: '21 Desember 2012',
-    //   updated_at: '21 Desember 2012',
-    // },
+    // work: {},
   }),
   computed: {
     height() {
@@ -174,49 +165,31 @@ export default {
     },
   },
   methods: {
-    // addWork() {
-    //   this.work.id = Math.random();
-    //   if (this.work.image_cover === null)
-    //     this.work.image_cover = '/temp-profile.webp';
-    //   this.$store.commit('works/add', this.work);
-    //   this.file = null;
-    //   this.work = {
-    //     image_cover: null,
-    //     title: null,
-    //     text: null,
-    //     type: null,
-    //     hashtags: null,
-    //     writer_id: 1,
-    //     reader_list: [1, 2, 3, 4, 5],
-    //     favorite: 20,
-    //     bookshelf: 21,
-    //     created_at: '21 Desember 2012',
-    //     updated_at: '21 Desember 2012',
-    //   };
-    //   this.success = true;
-    //   setTimeout(() => {
-    //     this.success = false
-    //   }, 2000);
-    // },
-    editWork() {
-      this.$store.commit('works/edit', this.work)
-      this.success = true
-      setTimeout(() => {
-        this.success = false
-      }, 2000)
+    async putWork() {
+      await this.$axios.put(`/works/${this.work.id}`, this.work).then(
+        () => {
+          this.success = true
+          setTimeout(() => {
+            this.success = false
+          }, 2000)
+        }
+        // (onRejected) => {
+        //     // Some task on failure
+        // }
+      )
     },
     fileToImage() {
       if (this.file) {
-        this.work.image_cover = URL.createObjectURL(this.file)
+        this.work.content.img_cover = URL.createObjectURL(this.file)
       }
     },
   },
   components: { TiptapEditor },
-  created() {
-    const data = this.$store.state.works.data.find(
-      (work) => work.id == this.$route.params.id
-    )
-    this.work = { ...data }
-  },
+  // created() {
+  //   const data = this.$store.state.works.data.find(
+  //     (work) => work.id == this.$route.params.id
+  //   )
+  //   this.work = { ...data }
+  // },
 }
 </script>

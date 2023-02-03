@@ -20,7 +20,7 @@
                   v-if="file"
                   height="100%"
                   cover
-                  :src="work.image_cover"
+                  :src="work.content.img_cover"
                 ></v-img>
                 <v-icon v-else style="inset: 0; position: absolute" x-large>
                   mdi-plus-box
@@ -29,7 +29,7 @@
               <p class="caption text--secondary text-center">Preview</p>
             </v-col>
             <v-col cols="8" md="9">
-              <v-radio-group class="my-0" v-model="work.type" mandatory>
+              <v-radio-group class="my-0" v-model="work.keyword.type" mandatory>
                 <template v-slot:label>
                   <div>Pilih jenis Karya Tulis</div>
                 </template>
@@ -62,7 +62,7 @@
                 hint="Pilih judul yang sesuai dan menarik pembaca"
                 persistent-hint
                 required
-                v-model="work.title"
+                v-model="work.content.title"
               ></v-text-field>
               <v-autocomplete
                 outlined
@@ -77,7 +77,7 @@
                 persistent-hint
                 :counter="5"
                 :items="hashtags"
-                v-model="work.hashtags"
+                v-model="work.keyword.hashtags"
               ></v-autocomplete>
               <v-file-input
                 outlined
@@ -99,31 +99,8 @@
             <v-col cols="12">
               <div>Tulis karyamu di kotak ini</div>
               <client-only>
-                <tiptap-editor v-model="work.text" />
+                <tiptap-editor v-model="work.content.text" />
               </client-only>
-              <!-- <v-sheet outlined class="py-4" rounded="lg">
-                <div id="codex-editor"/>
-              </v-sheet>
-              <v-btn type="button" name="button" @click="save()">save</v-btn>
-              <div v-if="value">
-                <template v-for="val in value.blocks">
-                  <p v-if="val.data.text" v-html="val.data.text"></p>
-                  <p v-if="val.data.items">
-                    <ul v-for="item in val.data.items">
-                      <li v-html="item"></li>
-                    </ul>
-                  </p>
-                </template>
-              </div> -->
-
-              <!-- <TextBox
-                ref="myQuillEditor"
-                v-model="content"
-                :options="editorOption"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @ready="onEditorReady($event)"
-              /> -->
             </v-col>
           </v-row>
         </v-card-text>
@@ -131,8 +108,8 @@
           <v-btn
             class="ma-2 px-4"
             color="success"
-            :disabled="!work.title || !work.text"
-            @click="addWork"
+            :disabled="!work.content.title || !work.content.text"
+            @click="postNewWork"
           >
             Unggah
           </v-btn>
@@ -159,17 +136,16 @@ export default {
     file: null,
     success: false,
     work: {
-      image_cover: null,
-      title: null,
-      text: null,
-      type: 'Fiksi',
-      hashtags: [],
-      writer_id: 1,
-      reader_id: [],
-      favorite_count: null,
-      bookshelf_count: null,
-      created_at: '21 Desember 2012',
-      updated_at: '21 Desember 2012',
+      content: {
+        img_cover: null,
+        title: null,
+        text: null,
+      },
+      keyword: {
+        type: 'Fiksi',
+        hashtags: [],
+      },
+      activity: { written_by: null },
     },
   }),
   computed: {
@@ -196,34 +172,87 @@ export default {
     },
   },
   methods: {
-    addWork() {
-      // this.success = false;
-      this.work.id = Math.random()
-      if (this.work.image_cover === null)
-        this.work.image_cover = '/temp-profile.webp'
-      this.$store.commit('works/add', this.work)
-      this.file = null
-      this.work = {
-        image_cover: null,
-        title: null,
-        text: null,
-        type: null,
-        hashtags: null,
-        writer_id: 1,
-        reader_list: [1, 2, 3, 4, 5],
-        favorite: 20,
-        bookshelf: 21,
-        created_at: '21 Desember 2012',
-        updated_at: '21 Desember 2012',
-      }
-      this.success = true
-      setTimeout(() => {
-        this.success = false
-      }, 2000)
+    getUser() {
+      return this.$axios.get(`/users/63da9fa53946349787ffae30`)
     },
+    async postNewWork() {
+      if (this.work.content.img_cover === null)
+        this.work.content.img_cover = '/temp-profile.webp'
+      await this.$axios
+        .get(`/users/63da9fa53946349787ffae30`)
+        .then((user) => {
+          console.log(user.data)
+          this.work.activity.written_by = {
+            id: user.data.id,
+            username: user.data.account.username,
+            img_profile: user.data.profile.img_profile,
+            pen_name: user.data.profile.pen_name,
+          }
+        })
+        .then(() => {
+          console.log(this.work)
+          this.$axios.post(`/works`, this.work)
+        })
+        .then(() => {
+          this.file = null
+          ;(this.work = {
+            content: {
+              img_cover: null,
+              title: null,
+              text: null,
+            },
+            keyword: {
+              type: 'Fiksi',
+              hashtags: [],
+            },
+            activity: { written_by: null },
+          }),
+            (this.success = true)
+          setTimeout(() => {
+            this.$router.push('/home')
+          }, 2000)
+        })
+    },
+    // async addWork() {
+    //   // this.success = false;
+    //   if (this.work.image_cover === null)
+    //     this.work.image_cover = '/temp-profile.webp'
+    //   await this.$axios.get(`/users/63da9fa53946349787ffae30`)
+    //     .then((user) => {
+    //       this.work.activity.written_by = {
+    //         id: user.data.id,
+    //         username: user.data.account.username,
+    //         img_profile: user.data.profile.img_profile,
+    //         pen_name: user.data.profile.pen_name
+    //       }
+    //     })
+    //     .then(() => {
+    //       this.$axios.post(`/works`, this.work)
+    //     })
+    //     .then(() => {
+    //       this.file = null
+    //       this.work = {
+    //         content: {
+    //           img_cover: null,
+    //           title: null,
+    //           text: null,
+    //         },
+    //         keyword: {
+    //           type: 'Fiksi',
+    //           hashtags: [],
+    //         },
+    //       }
+
+    //       this.success = true
+    //       setTimeout(() => {
+    //         this.$route.push('/home');
+    //       }, 2000)
+    //     })
+    //   // this.$store.commit('works/add', this.work)
+    // },
     fileToImage() {
       if (this.file) {
-        this.work.image_cover = URL.createObjectURL(this.file)
+        this.work.content.img_cover = URL.createObjectURL(this.file)
       }
     },
   },

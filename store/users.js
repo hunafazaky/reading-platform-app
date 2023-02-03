@@ -1,5 +1,6 @@
 export const state = () => ({
   data: [],
+  me: [],
 })
 
 export const getters = {
@@ -31,6 +32,9 @@ export const mutations = {
     state.data.push({
       user,
     })
+  },
+  login(state, user) {
+    state.me = { user }
   },
   remove(state, { todo }) {
     state.list.splice(state.list.indexOf(todo), 1)
