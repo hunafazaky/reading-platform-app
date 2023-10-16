@@ -3,7 +3,7 @@ export const state = () => ({
   worksData: null,
   usersData: null,
   workData: null,
-  myData: null,
+  userData: null,
 })
 
 export const mutations = {
@@ -22,8 +22,14 @@ export const mutations = {
   setWork(state, data) {
     state.workData = data
   },
-  setMe(state, data) {
-    state.myData = data
+  setUser(state, data) {
+    state.userData = data
+  },
+  updateReadList(state, data) {
+    state.userData.read_list.push(data)
+  },
+  updateLikeList(state, data) {
+    state.userData.like_list.push(data)
   },
 }
 
@@ -40,9 +46,8 @@ export const actions = {
   decrement(context) {
     context.commit('decrement')
   },
-  fetchWorks({ commit }) {
-    // Lakukan panggilan API di sini, misalnya dengan axios
-    this.$axios.get('/works')
+  getWorks({ commit }) {
+    this.$axios.get('/works?sortBy=newest')
       .then(response => {
         commit('setWorks', response.data)
       })
@@ -50,8 +55,7 @@ export const actions = {
         console.error('Error fetching data from API:', error)
       })
   },
-  fetchUsers({ commit }) {
-    // Lakukan panggilan API di sini, misalnya dengan axios
+  getUsers({ commit }) {
     this.$axios.get('/users')
       .then(response => {
         commit('setUsers', response.data)
@@ -60,8 +64,7 @@ export const actions = {
         console.error('Error fetching data from API:', error)
       })
   },
-  fetchWorkById({ commit }, id) {
-    // Lakukan panggilan API di sini, misalnya dengan axios
+  getWorkById({ commit }, id) {
     this.$axios.get('/works/' + id)
       .then(response => {
         commit('setWork', response.data)
@@ -70,8 +73,7 @@ export const actions = {
         console.error('Error fetching data from API:', error)
       })
   },
-  fetchUserById({ commit }, id) {
-    // Lakukan panggilan API di sini, misalnya dengan axios
+  getUserById({ commit }, id) {
     this.$axios.get('/users/' + id)
       .then(response => {
         commit('setUser', response.data)
@@ -80,25 +82,55 @@ export const actions = {
         console.error('Error fetching data from API:', error)
       })
   },
-  auth({ commit }, params) {
-    // Lakukan panggilan API di sini, misalnya dengan axios
-    this.$axios.get(`/users?username=${params.username}&password=${params.password}`)
-      .then(response => {
-        commit('setMe', response.data)
-      })
-      .catch(error => {
-        console.error('Error fetching data from API:', error)
-      })
+  getUser({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      this.$axios.get('/users/' + id)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error('Error fetching data from API:', error)
+          reject(error)
+        })
+    })
+  },
+  updateReadList({ state, commit }, data) {
+    return new Promise((resolve, reject) => {
+      commit('updateReadList', data)
+      this.$axios.put(`/users/${state.userData.id}`, state.userData)
+        .then(response => {
+          commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  updateLikeList({ state, commit }, data) {
+    return new Promise((resolve, reject) => {
+      commit('updateLikeList', data)
+      this.$axios.put(`/users/${state.userData.id}`, state.userData)
+        .then(response => {
+          commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
   },
   regis({ commit }, data) {
     return new Promise((resolve, reject) => {
       this.$axios.post('/users', {username:data.username, pen_name:data.username, password:data.password} )
         .then(response => {
-          console.log('Response: ', response.data)
+          console.log(response.data)
           resolve(response.data)
         })
         .catch(error => {
-          console.error('Error: ', error)
+          console.error(error)
           reject(error)
         })
     })
@@ -107,12 +139,37 @@ export const actions = {
     return new Promise((resolve, reject) => {
       this.$axios.post('/users/login', {username:data.username, password:data.password} )
         .then(response => {
-          // Lakukan sesuatu jika POST berhasil, jika diperlukan
-          commit('setMe', response.data)
+          commit('setUser', response.data)
           resolve(response.data)
         })
         .catch(error => {
-          console.error('Error: ', error)
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  postWork({ commit }, data) {
+    return new Promise((resolve, reject) => {
+      this.$axios.post('/works', data )
+        .then(response => {
+          console.log(response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  deleteWork({ commit }, id) {
+    return new Promise((resolve, reject) => {
+      this.$axios.delete('/works/'+ id )
+        .then(response => {
+          console.log(response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
           reject(error)
         })
     })
@@ -133,6 +190,6 @@ export const getters = {
     return state.workData
   },
   me(state) {
-    return state.myData
+    return state.userData
   }
 }

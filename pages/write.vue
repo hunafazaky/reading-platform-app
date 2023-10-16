@@ -20,7 +20,7 @@
                   v-if="file"
                   height="100%"
                   cover
-                  :src="work.content.img_cover"
+                  :src="work.cover"
                 ></v-img>
                 <v-icon v-else style="inset: 0; position: absolute" x-large>
                   mdi-plus-box
@@ -29,7 +29,7 @@
               <p class="caption text--secondary text-center">Preview</p>
             </v-col>
             <v-col cols="8" md="9">
-              <v-radio-group class="my-0" v-model="work.keyword.type" mandatory>
+              <!-- <v-radio-group class="my-0" v-model="work.category[0]" mandatory>
                 <template v-slot:label>
                   <div>Pilih jenis Karya Tulis</div>
                 </template>
@@ -53,8 +53,8 @@
                     <div>Non-Fiksi</div>
                   </template>
                 </v-radio>
-              </v-radio-group>
-              <v-divider></v-divider>
+              </v-radio-group> -->
+              <!-- <v-divider></v-divider> -->
               <v-text-field
                 outlined
                 dense
@@ -62,7 +62,7 @@
                 hint="Pilih judul yang sesuai dan menarik pembaca"
                 persistent-hint
                 required
-                v-model="work.content.title"
+                v-model="work.title"
               ></v-text-field>
               <v-autocomplete
                 outlined
@@ -77,7 +77,7 @@
                 persistent-hint
                 :counter="5"
                 :items="hashtags"
-                v-model="work.keyword.hashtags"
+                v-model="work.category"
               ></v-autocomplete>
               <v-file-input
                 outlined
@@ -99,7 +99,7 @@
             <v-col cols="12">
               <div>Tulis karyamu di kotak ini</div>
               <client-only>
-                <tiptap-editor v-model="work.content.text" />
+                <tiptap-editor v-model="work.text" />
               </client-only>
             </v-col>
           </v-row>
@@ -108,8 +108,8 @@
           <v-btn
             class="ma-2 px-4"
             color="success"
-            :disabled="!work.content.title || !work.content.text"
-            @click="postNewWork"
+            :disabled="!work.title || !work.text"
+            @click="postWork"
           >
             Unggah
           </v-btn>
@@ -133,21 +133,16 @@ import TiptapEditor from '~/components/TiptapEditor.vue'
 export default {
   name: 'Write',
   data: () => ({
-    me: {},
+    // me: {},
     loading: true,
     file: null,
     success: false,
     work: {
-      content: {
-        img_cover: '',
-        title: '',
-        text: '',
-      },
-      keyword: {
-        type: 'Fiksi',
-        hashtags: [],
-      },
-      activity: { written_by: {} },
+      cover: null,
+      title: null,
+      writer: null,
+      category: [],
+      text: null,
     },
   }),
   computed: {
@@ -172,55 +167,71 @@ export default {
       })
       return hashtags
     },
+    me() {
+      if (this.$store.getters['me']) {
+        return this.$store.getters['me'];
+      } else {
+        this.$router.push('/');
+        return []; 
+      }
+    },
   },
   methods: {
-    getMe() {
-      this.me = this.$store.state.users.me
-      if (!this.me.id) this.$router.push('/')
-      else {
-        this.loading = false
-      }
-    },
-    setWrittenBy() {
-      if (this.me.id) {
-        this.work.activity.written_by = {
-          id: this.me.id,
-          username: this.me.account.username,
-          img_profile: this.me.profile.img_profile,
-          pen_name: this.me.profile.pen_name,
-        }
-      }
-    },
-    postNewWork() {
-      if (this.work.content.img_cover === null)
-        this.work.content.img_cover = '/temp-profile.webp'
-      this.$axios
-        .post(`/works`, this.work)
-        // .then((data) => {
-        //   this.me.activity.writings.push({
-        //     id: data.id,
-        //     createdAt: data.createdAt,
-        //     updatedAt: data.updatedAt
-        //   })
-        //   this.$axios.put(`/users/${this.me.id}`, this.me);
-        // })
-        .then(() => {
-          this.success = true
-          setTimeout(() => {
-            this.$router.push('/home')
-          }, 2000)
-        })
+    // getMe() {
+    //   this.me = this.$store.state.users.me
+    //   if (!this.me.id) this.$router.push('/')
+    //   else {
+    //     this.loading = false
+    //   }
+    // },
+    // setWrittenBy() {
+    //   if (this.me.id) {
+    //     this.work.writer = {
+    //       id: this.me.id,
+    //       username: this.me.account.username,
+    //       img_profile: this.me.profile.img_profile,
+    //       pen_name: this.me.profile.pen_name,
+    //     }
+    //   }
+    // },
+    postWork() {
+      this.work.writer = this.me.id;
+      if (this.work.cover === null) this.work.cover = '/temp-profile.webp';
+      this.$store.dispatch('postWork', this.work).then((data) => {
+        // this.works = this.$store.getters['works'];
+        // this.loading = false;
+        this.success = true
+        setTimeout(() => {
+          this.$router.push('/home')
+        }, 2000)
+      });
+      // this.$axios
+      //   .post(`/works`, this.work)
+      //   // .then((data) => {
+      //   //   this.me.activity.writings.push({
+      //   //     id: data.id,
+      //   //     createdAt: data.createdAt,
+      //   //     updatedAt: data.updatedAt
+      //   //   })
+      //   //   this.$axios.put(`/users/${this.me.id}`, this.me);
+      //   // })
+      //   .then(() => {
+      //     this.success = true
+      //     setTimeout(() => {
+      //       this.$router.push('/home')
+      //     }, 2000)
+      //   })
     },
     fileToImage() {
       if (this.file) {
-        this.work.content.img_cover = URL.createObjectURL(this.file)
+        this.work.cover = URL.createObjectURL(this.file)
       }
     },
   },
   components: { TiptapEditor },
   mounted() {
-    this.getMe()
-    this.setWrittenBy()
+    // this.getMe()
+    // this.setWrittenBy()
   },
   created() {},
 }

@@ -2,8 +2,8 @@
   <v-row :justify="works?.length > 0 ? 'start' : 'center'">
     <v-col cols="8">
       <v-row class="mt-0">
-        <LoadingComponent v-if="loading" :loading="loading" />
-        <template v-if="!loading">
+        <LoadingComponent v-if="loading.work" :loading="loading.work" />
+        <template v-if="!loading.work">
           <template v-if="works?.length > 0">
             <v-col
               v-for="work in works"
@@ -16,6 +16,7 @@
                 :wordLimit="{ title: 100, text: 0 }"
                 :miniVariant="false"
                 :mutation="false"
+                @remove-work="deleteWork"
               />
             </v-col>
           </template>
@@ -26,8 +27,8 @@
       </v-row>
     </v-col>
     <v-col cols="4">
-      <!-- <LoadingComponent v-if="loading.me" :loading="loading.me" /> -->
-      <template>
+      <LoadingComponent v-if="loading.user" :loading="loading.user" />
+      <template v-if="!loading.user">
         <v-card rounded="lg" fixed outlined>
           <v-card-text>
             <nuxt-link
@@ -44,6 +45,7 @@
             </nuxt-link>
           </v-card-text>
           <v-card-title>Terakhir ditulis</v-card-title>
+          <!-- {{ me.work_list }} -->
           <v-card-text>
             <nuxt-link
               v-for="(work, i) in me.work_list"
@@ -85,11 +87,12 @@ import LoadingComponent from '../components/LoadingComponent.vue'
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'Explore',
+  name: 'Home',
   data: () => ({
-    // me: {},
-    // works: {},
-    loading: true,
+    loading: {
+      work: true,
+      user: true
+    },
   }),
   computed: {
     counter() {
@@ -114,11 +117,24 @@ export default {
     decrementCounter() {
       this.$store.dispatch('decrement')
     },
-    fetchWorks() {
-      this.$store.dispatch('fetchWorks').then(() => {
-        // this.works = this.$store.getters['works'];
-        this.loading = false;
+    getWorks() {
+      this.$store.dispatch('getWorks').then(() => {
+        this.loading.work = false;
       });
+    },
+    getUserById() {
+      this.$store.dispatch('getUserById', this.me.id).then(() => {
+        this.loading.user = false;
+      });
+    },
+    deleteWork(id) {
+      if (window.confirm("Apakah anda ingin menghapus karya tulis ini??")) {
+        this.$store.dispatch('deleteWork', id)
+          .then(() => {
+            this.getWorks()
+            this.getUserById()
+          })
+      }
     },
     addTodo(e) {
       console.log(e.target.value)
@@ -136,9 +152,8 @@ export default {
     LoadingComponent,
   },
   mounted() {
-    // this.getMe()
-    // this.getWorks()
-    this.fetchWorks()
+    this.getWorks()
+    this.getUserById()
   },
 }
 </script>

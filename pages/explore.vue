@@ -39,29 +39,40 @@ import { mapMutations } from 'vuex'
 export default {
   name: 'Explore',
   data: () => ({
-    me: {},
-    works: {},
     loading: true,
   }),
-  computed: {},
+  computed: {
+    me() {
+      if (this.$store.getters['me']) {
+        return this.$store.getters['me'];
+      } else {
+        this.$router.push('/');
+        return []; 
+      }
+    },
+    works() {
+      return this.$store.getters['works'];
+    }
+  },
   methods: {
-    getMe() {
-      this.me = this.$store.state.users.me
-      if (!this.me.id) this.$router.push('/')
-      // else this.loading.me = false
-    },
     getWorks() {
-      this.$axios.get(`/works`).then((works) => {
-        this.works = works.data
-        this.loading = false
-      })
+      this.$store.dispatch('getWorks').then(() => {
+        this.loading = false;
+      });
     },
-    // removeWork(work_id) {
-    //   this.$axios.delete(`/works/${work_id}`)
-    //     .then(() => {
-    //       this.getWorks()
-    //     })
-    // },
+    getUserById() {
+      this.$store.dispatch('getUserById', this.me.id).then(() => {
+      });
+    },
+    deleteWork(id) {
+      if (window.confirm("Apakah anda ingin menghapus karya tulis ini??")) {
+        this.$store.dispatch('deleteWork', id)
+          .then(() => {
+            this.getWorks()
+            this.getUserById()
+          })
+      }
+    },
     addTodo(e) {
       console.log(e.target.value)
       console.log(this.todos)
@@ -78,8 +89,8 @@ export default {
     LoadingComponent,
   },
   mounted() {
-    this.getMe()
     this.getWorks()
+    this.getUserById()
   },
 }
 </script>

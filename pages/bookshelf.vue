@@ -1,14 +1,15 @@
 <template>
-  <v-row
-    :justify="me.activity?.bookshelf.length > 0 ? 'start' : 'center'"
-    class="px-4 py-1"
-  >
+  <!-- <div>{{ works }}</div> -->
+  <v-row :justify="works.length > 0 ? 'start' : 'center'" class="px-4">
+    <v-col class="pa-1" cols="12">
+      <Hashtags />
+    </v-col>
     <LoadingComponent v-if="loading" :loading="loading" />
     <template v-if="!loading">
-      <template v-if="me.activity?.bookshelf.length > 0">
+      <template v-if="works.length > 0">
         <v-col
-          v-for="work_id in me.activity?.bookshelf"
-          :key="work_id"
+          v-for="work in works"
+          :key="work.id"
           class="px-1 py-0"
           cols="4"
           sm="4"
@@ -16,9 +17,10 @@
           xl="2"
         >
           <WorkCard
-            :work="getWorkById(work_id)"
+            :work="work"
             :wordLimit="{ title: 100, text: 0 }"
-            :miniVariant="true"
+            :miniVariant="false"
+            :mutation="false"
           />
         </v-col>
       </template>
@@ -31,27 +33,48 @@
 
 <script>
 import WorkCard from '../components/WorkCard.vue'
+import Hashtags from '../components/Hashtags.vue'
 import LoadingComponent from '../components/LoadingComponent.vue'
 import { mapMutations } from 'vuex'
 
 export default {
-  name: 'Bookshelf',
+  name: 'Explore',
   data: () => ({
-    me: {},
     loading: true,
+    works: null
   }),
-  computed: {},
-  methods: {
-    getMe() {
-      this.me = this.$store.state.users.me
-      if (!this.me.id) this.$router.push('/')
-      else this.loading = false
+  computed: {
+    me() {
+      if (this.$store.getters['me']) {
+        this.works = this.$store.getters['me'].like_list
+        return this.$store.getters['me'];
+      } else {
+        this.$router.push('/');
+        return []; 
+      }
     },
-    getWorkById(work_id) {
-      this.$axios.get(`/works/${work_id}`).then((work) => {
-        this.work = work.data
-      })
-      return this.work
+    // works() {
+    //   return this.$store.getters['works'];
+    // }
+  },
+  methods: {
+    getWorks() {
+      this.$store.dispatch('getWorks').then(() => {
+        this.loading = false;
+      });
+    },
+    getUserById() {
+      this.$store.dispatch('getUserById', this.me.id).then(() => {
+      });
+    },
+    deleteWork(id) {
+      if (window.confirm("Apakah anda ingin menghapus karya tulis ini??")) {
+        this.$store.dispatch('deleteWork', id)
+          .then(() => {
+            this.getWorks()
+            this.getUserById()
+          })
+      }
     },
     addTodo(e) {
       console.log(e.target.value)
@@ -65,11 +88,12 @@ export default {
   },
   components: {
     WorkCard,
+    Hashtags,
     LoadingComponent,
   },
   mounted() {
-    this.getMe()
-    if (!this.me.account) this.$router.push('/')
+    this.getWorks()
+    this.getUserById()
   },
 }
 </script>

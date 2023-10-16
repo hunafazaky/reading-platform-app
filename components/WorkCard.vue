@@ -81,7 +81,7 @@
                 icon
                 class="mb-1"
                 color="error"
-                @click="$emit('removeWork', work.id)"
+                @click="removeWork(work.id)"
               >
                 <v-icon> mdi-text-box-remove </v-icon>
               </v-btn>
@@ -95,11 +95,20 @@
                 </v-btn>
               </v-col>
               <v-col cols="12">
-                <v-btn x-small color="primary">
+                <v-btn 
+                  x-small 
+                  color="primary" 
+                  @click="likeWork(work.id)"
+                >
                   <v-icon small left> mdi-text-box-check </v-icon>
                   simpan
                 </v-btn>
-                <v-btn x-small color="success" nuxt :to="`/work/${work.id}/read`">
+                <v-btn 
+                  x-small 
+                  color="success" 
+                  @click="readWork(work.id)"
+                  nuxt :to="`/work/${work.id}/read`"
+                >
                   <v-icon small left> mdi-text-box-search </v-icon>
                   baca
                 </v-btn>
@@ -111,7 +120,7 @@
                 </v-btn>
                 <v-btn
                   v-if="work.writer.username === me.username"  
-                  x-small color="error">
+                  x-small color="error" @click="removeWork(work.id)">
                   <v-icon small left> mdi-text-box-remove </v-icon>
                   hapus
                 </v-btn>
@@ -151,19 +160,16 @@ export default {
     }
   },
   methods: {
-    // getMe() {
-    //   this.me = this.$store.state.users.me
-    //   // if (!this.me.id) this.$router.push('/')
-    //   // else this.loading.me = false
-    // },
-    // removeWork(work_id) {
-    // this.$store.commit('works/remove', work)
-    // this.$axios.delete(`/works/${work_id}`)
-    //   this.$emit('removeWork', work_id)
-    // },
+    removeWork(id) {
+      this.$emit('remove-work', id)
+    },
+    readWork(id) {
+      this.$store.dispatch('updateReadList', id)
+    },
+    likeWork(id) {
+      this.$store.dispatch('updateLikeList', id)
+    },
   },
-  mounted() {
-    // this.getMe()
-  },
+  mounted() {},
 }
 </script>

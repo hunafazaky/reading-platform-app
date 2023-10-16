@@ -106,19 +106,6 @@ export default {
     LoadingComponent,
   },
   computed: {
-    // errorMessage() {
-    //   if (this.loginAttempt) {
-    //     if(this.$store.getters['me']) {
-    //       this.loading = false;
-    //       this.$router.push('/home');
-    //       return false
-    //     } else {
-    //       this.loading = false;
-    //       this.message = 'Login Gagal! Pastikan username dan password benar!!';
-    //       return true
-    //     }
-    //   } else return false
-    // },
     height() {
       switch (this.$vuetify.breakpoint.name) {
         case 'xs':
