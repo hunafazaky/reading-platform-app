@@ -1,43 +1,53 @@
 <template>
-  <v-row :justify="works.length > 0 ? 'start' : 'center'" class="px-4">
-    <v-col class="pa-1" cols="12">
-      <Hashtags />
-    </v-col>
-    <LoadingComponent v-if="loading" :loading="loading" />
-    <template v-if="!loading">
-      <template v-if="works.length > 0">
-        <v-col
-          v-for="work in works"
-          :key="work.id"
-          class="px-1 py-0"
-          cols="4"
-          sm="4"
-          md="3"
-          xl="2"
-        >
-          <WorkCard
-            :work="work"
-            :wordLimit="{ title: 100, text: 0 }"
-            :miniVariant="false"
-            :mutation="false"
-          />
-        </v-col>
+  <div>
+    <LoadingPage :loading="loadingPage"/>
+    <v-row :justify="works.length > 0 ? 'start' : 'center'" class="px-4">
+      <v-col class="pa-1" cols="12">
+        <Hashtags />
+      </v-col>
+      <LoadingComponent v-if="loading" :loading="loading" />
+      <template v-if="!loading">
+        <template v-if="works.length > 0">
+          <v-col
+            v-for="work in works"
+            :key="work.id"
+            class="px-1 py-0"
+            cols="4"
+            sm="4"
+            md="3"
+            xl="2"
+          >
+            <WorkCard
+              :work="work"
+              :wordLimit="{ title: 100, text: 0 }"
+              :miniVariant="false"
+              :mutation="false"
+            />
+          </v-col>
+        </template>
+        <template v-else>
+          <p class="overline text-center text-secondary ma-4">Kosong</p>
+        </template>
       </template>
-      <template v-else>
-        <p class="overline text-center text-secondary ma-4">Kosong</p>
-      </template>
-    </template>
-  </v-row>
+    </v-row>
+  </div>
 </template>
 
 <script>
 import WorkCard from '../components/WorkCard.vue'
 import Hashtags from '../components/Hashtags.vue'
 import LoadingComponent from '../components/LoadingComponent.vue'
+import LoadingPage from '../components/LoadingPage.vue'
 import { mapMutations } from 'vuex'
 
 export default {
   name: 'Explore',
+  props: {
+    loadingPage: {
+      type: Boolean,
+      default: false
+    }
+  },
   data: () => ({
     loading: true,
   }),
@@ -50,15 +60,24 @@ export default {
         return []; 
       }
     },
+    // works() {
+    //   return this.$store.getters['works'];
+    // },
     works() {
-      return this.$store.getters['works'];
+      if (this.$store.getters['works']) {
+        this.loading = false
+        return this.$store.getters['works']
+      }
     }
   },
   methods: {
+    // getWorks() {
+    //   this.$store.dispatch('getWorks').then(() => {
+    //     this.loading = false;
+    //   });
+    // },
     getWorks() {
-      this.$store.dispatch('getWorks').then(() => {
-        this.loading = false;
-      });
+      this.$store.dispatch('getWorks')
     },
     getUserById() {
       this.$store.dispatch('getUserById', this.me.id).then(() => {
@@ -87,6 +106,7 @@ export default {
     WorkCard,
     Hashtags,
     LoadingComponent,
+    LoadingPage,
   },
   mounted() {
     this.getWorks()

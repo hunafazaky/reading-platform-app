@@ -34,7 +34,7 @@
               <v-img :src="work.writer.photo"></v-img>
             </v-avatar>
             <span
-              class="font-weight-bold text-truncate"
+              class="font-weight-bold text-truncate text-capitalize"
               v-text="work.writer.pen_name"
             ></span>
           </nuxt-link>
@@ -96,19 +96,30 @@
               </v-col>
               <v-col cols="12">
                 <v-btn 
+                  v-if="!liked"
                   x-small 
+                  :loading="loading"
                   color="primary" 
-                  @click="likeWork(work.id)"
+                  @click="likeWork(work)"
                 >
                   <v-icon small left> mdi-text-box-check </v-icon>
                   simpan
                 </v-btn>
                 <v-btn 
+                  v-if="liked"
+                  x-small 
+                  color="secondary" 
+                  @click="dislikeWork(work)"
+                >
+                  <v-icon small left> mdi-text-box-minus </v-icon>
+                  buang
+                </v-btn>
+                <v-btn 
                   x-small 
                   color="success" 
-                  @click="readWork(work.id)"
                   nuxt :to="`/work/${work.id}/read`"
-                >
+                  >
+                  <!-- @click="readWork(work)" -->
                   <v-icon small left> mdi-text-box-search </v-icon>
                   baca
                 </v-btn>
@@ -153,23 +164,46 @@ export default {
   },
   data: () => ({
     // me: {},
+    liked:null,
+    loading:false
   }),
   computed: {
     me() {
       return this.$store.getters['me'];
-    }
+    },
   },
   methods: {
     removeWork(id) {
       this.$emit('remove-work', id)
     },
-    readWork(id) {
-      this.$store.dispatch('updateReadList', id)
+    // readWork(work) {
+    //   this.$store.dispatch('updateReadList', work.id)
+    //   this.$store.dispatch('updateReaders', work)
+    // },
+    likeCheck() {
+      const result = this.work.like_by.filter((item => item._id === this.me.id))
+      // console.log(result);
+      if (result.length > 0) {
+        this.liked = true
+      } else this.liked = false
     },
-    likeWork(id) {
-      this.$store.dispatch('updateLikeList', id)
+    likeWork(work) {
+      this.loading = true;
+      this.$store.dispatch('updateLikeList', work.id)
+      .then((data) => {
+        this.$store.dispatch('updateLikeBy', work)
+        .then((data) => {
+          this.loading = false
+          this.liked = true
+        })
+      })
     },
   },
-  mounted() {},
+  mounted() {
+    this.likeCheck();
+    // if (!this.work.id) {
+    //   this.work.id = this.work._id;
+    // }
+  },
 }
 </script>

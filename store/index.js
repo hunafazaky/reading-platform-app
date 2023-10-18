@@ -1,18 +1,20 @@
 export const state = () => ({
-  counter: 0,
+  // counter: 0,
   worksData: null,
   usersData: null,
   workData: null,
   userData: null,
+  workReaders: null,
+  workLikeBy: null,
 })
 
 export const mutations = {
-  increment(state) {
-    state.counter++
-  },
-  decrement(state) {
-    state.counter--
-  },
+  // increment(state) {
+  //   state.counter++
+  // },
+  // decrement(state) {
+  //   state.counter--
+  // },
   setWorks(state, data) {
     state.worksData = data
   },
@@ -26,26 +28,42 @@ export const mutations = {
     state.userData = data
   },
   updateReadList(state, data) {
-    state.userData.read_list.push(data)
+    const newData = state.userData.read_list.filter((item => item._id !== data))
+    newData.unshift(data)
+    state.userData.read_list = newData
+  },
+  updateReaders(state, data) {
+    const newData = data.readers.filter((item => item._id !== state.userData.id))
+    newData.unshift(state.userData.id)
+    // state.userData.read_list = newData
+    state.workReaders = newData
+  },
+  updateLikeBy(state, data) {
+    const newData = data.like_by
+    newData.unshift(state.userData.id)
+    // state.userData.read_list = newData
+    state.workLikeBy = newData
   },
   updateLikeList(state, data) {
-    state.userData.like_list.push(data)
+    const newData = state.userData.like_list.filter((item => item._id !== data))
+    newData.unshift(data)
+    state.userData.like_list = newData
   },
 }
 
 export const actions = {
-  async fetchCounter({ state }) {
-    // make request
-    const res = { data: 10 }
-    state.counter = res.data
-    return res.data
-  },
-  increment(context) {
-    context.commit('increment')
-  },
-  decrement(context) {
-    context.commit('decrement')
-  },
+  // async fetchCounter({ state }) {
+  //   // make request
+  //   const res = { data: 10 }
+  //   state.counter = res.data
+  //   return res.data
+  // },
+  // increment(context) {
+  //   context.commit('increment')
+  // },
+  // decrement(context) {
+  //   context.commit('decrement')
+  // },
   getWorks({ commit }) {
     this.$axios.get('/works?sortBy=newest')
       .then(response => {
@@ -65,13 +83,17 @@ export const actions = {
       })
   },
   getWorkById({ commit }, id) {
-    this.$axios.get('/works/' + id)
-      .then(response => {
-        commit('setWork', response.data)
-      })
-      .catch(error => {
-        console.error('Error fetching data from API:', error)
-      })
+    return new Promise((resolve, reject) => {
+      this.$axios.get('/works/' + id)
+        .then(response => {
+          commit('setWork', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error('Error fetching data from API:', error)
+          reject(error)
+        })
+    })
   },
   getUserById({ commit }, id) {
     this.$axios.get('/users/' + id)
@@ -94,9 +116,9 @@ export const actions = {
         })
     })
   },
-  updateReadList({ state, commit }, data) {
+  updateReadList({ state, commit }, workId) {
     return new Promise((resolve, reject) => {
-      commit('updateReadList', data)
+      commit('updateReadList', workId)
       this.$axios.put(`/users/${state.userData.id}`, state.userData)
         .then(response => {
           commit('setUser', response.data)
@@ -108,12 +130,40 @@ export const actions = {
         })
     })
   },
-  updateLikeList({ state, commit }, data) {
+  updateLikeList({ state, commit }, workId) {
     return new Promise((resolve, reject) => {
-      commit('updateLikeList', data)
-      this.$axios.put(`/users/${state.userData.id}`, state.userData)
+      commit('updateLikeList', workId)
+      this.$axios.put(`/users/${state.userData.id}`, { like_list:state.userData.like_list })
         .then(response => {
           commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  updateReaders({ state, commit }, work) {
+    return new Promise((resolve, reject) => {
+      commit('updateReaders', work)
+      this.$axios.put(`/works/${work.id}`, { readers:state.workReaders })
+        .then(response => {
+          // commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  updateLikeBy({ state, commit }, work) {
+    return new Promise((resolve, reject) => {
+      commit('updateLikeBy', work)
+      this.$axios.put(`/works/${work.id}`, { like_by:state.workLikeBy })
+        .then(response => {
+          // commit('setUser', response.data)
           resolve(response.data)
         })
         .catch(error => {

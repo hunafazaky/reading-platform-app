@@ -1,5 +1,6 @@
 <template>
   <div>
+    <LoadingPage :loading="loading"/>
     <h1 class="text-center ma-4">Reading App</h1>
     <v-row justify="center" align="center">
       <v-col md="6" lg="5" v-if="height >= 500">
@@ -31,12 +32,7 @@
               color="success"
               @click="regis"
             >
-            <span v-if="loading" :loading="loading">
-                ...
-              </span>
-              <span v-else>
-                registrasi
-              </span>
+              registrasi
             </v-btn>
             <v-btn
               v-if="form_title == 'Login'"
@@ -44,12 +40,7 @@
               color="primary"
               @click="login"
             >
-              <span v-if="loading" :loading="loading">
-                ...
-              </span>
-              <span v-else>
-                login
-              </span>
+              login
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -88,6 +79,7 @@
 
 <script>
 import LoadingComponent from '../components/LoadingComponent.vue'
+import LoadingPage from '../components/LoadingPage.vue'
 
 export default {
   layout: 'login',
@@ -104,6 +96,7 @@ export default {
   }),
   components: {
     LoadingComponent,
+    LoadingPage,
   },
   computed: {
     height() {
@@ -130,18 +123,25 @@ export default {
       this.form_title = 'Registrasi'
     },
     login() {
-      this.loginAttempt = true;
       this.loading = true;
       this.$store
       .dispatch('login', this.user)
       .then((data) => {
-        this.loading = false;
+        // this.loading = false;
         if (data.id) {
           this.message = 'Login Berhasil!!';
+          this.loginAttempt = true;
           this.$router.push('/home');
-        } else this.message = 'Error: ' + data.message;
+        } else {
+          this.message = 'Error: ' + data.message;
+          this.loginAttempt = true;
+          this.loading = false;
+        };
       })
-      .catch((err) => alert(err));
+      .catch((err) => {
+        alert(err)
+        this.loading = false;
+      });
     },
     regis() {
       this.regisAttempt = true;
