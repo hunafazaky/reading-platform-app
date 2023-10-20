@@ -198,6 +198,17 @@ export default {
         })
       })
     },
+    dislikeWork(work) {
+      this.loading = true;
+      this.$store.dispatch('removeLikeList', work.id)
+      .then((data) => {
+        this.$store.dispatch('removeLikeBy', work)
+        .then((data) => {
+          this.loading = false
+          this.liked = false
+        })
+      })
+    },
   },
   mounted() {
     this.likeCheck();

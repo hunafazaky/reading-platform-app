@@ -71,7 +71,7 @@
                 <template v-if="me.read_list.length > 0">
                   <nuxt-link
                     v-for="(read, i) in me.read_list"
-                    v-if="i < 10"
+                    v-if="i < 5"
                     :key="read._id"
                     :to="`/work/${read._id}/read`"
                     class="text-decoration-none text--secondary"

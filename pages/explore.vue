@@ -3,7 +3,7 @@
     <LoadingPage :loading="loadingPage"/>
     <v-row :justify="works.length > 0 ? 'start' : 'center'" class="px-4">
       <v-col class="pa-1" cols="12">
-        <Hashtags />
+        <Hashtags @hashtag-actived="hashtagActived"/>
       </v-col>
       <LoadingComponent v-if="loading" :loading="loading" />
       <template v-if="!loading">
@@ -50,6 +50,7 @@ export default {
   },
   data: () => ({
     loading: true,
+    category: null
   }),
   computed: {
     me() {
@@ -66,6 +67,10 @@ export default {
     works() {
       if (this.$store.getters['works']) {
         this.loading = false
+        if (this.category) {
+          const filtered = this.$store.getters['works'].filter((item) => item.category[0] === this.category)
+          return filtered
+        }
         return this.$store.getters['works']
       }
     }
@@ -76,6 +81,9 @@ export default {
     //     this.loading = false;
     //   });
     // },
+    hashtagActived(data) {
+      this.category = data;
+    },
     getWorks() {
       this.$store.dispatch('getWorks')
     },

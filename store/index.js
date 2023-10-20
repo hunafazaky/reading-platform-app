@@ -39,7 +39,7 @@ export const mutations = {
     state.workReaders = newData
   },
   updateLikeBy(state, data) {
-    const newData = data.like_by
+    const newData = data.like_by.filter((item => item._id !== state.userData.id))
     newData.unshift(state.userData.id)
     // state.userData.read_list = newData
     state.workLikeBy = newData
@@ -47,6 +47,17 @@ export const mutations = {
   updateLikeList(state, data) {
     const newData = state.userData.like_list.filter((item => item._id !== data))
     newData.unshift(data)
+    state.userData.like_list = newData
+  },
+  removeLikeBy(state, data) {
+    const newData = data.like_by.filter((item => item._id !== state.userData.id))
+    // newData.unshift(state.userData.id)
+    // state.userData.read_list = newData
+    state.workLikeBy = newData
+  },
+  removeLikeList(state, data) {
+    const newData = state.userData.like_list.filter((item => item._id !== data))
+    // newData.unshift(data)
     state.userData.like_list = newData
   },
 }
@@ -144,10 +155,10 @@ export const actions = {
         })
     })
   },
-  updateReaders({ state, commit }, work) {
+  updateLikeBy({ state, commit }, work) {
     return new Promise((resolve, reject) => {
-      commit('updateReaders', work)
-      this.$axios.put(`/works/${work.id}`, { readers:state.workReaders })
+      commit('updateLikeBy', work)
+      this.$axios.put(`/works/${work.id}`, { like_by:state.workLikeBy })
         .then(response => {
           // commit('setUser', response.data)
           resolve(response.data)
@@ -158,10 +169,38 @@ export const actions = {
         })
     })
   },
-  updateLikeBy({ state, commit }, work) {
+  removeLikeList({ state, commit }, workId) {
     return new Promise((resolve, reject) => {
-      commit('updateLikeBy', work)
+      commit('removeLikeList', workId)
+      this.$axios.put(`/users/${state.userData.id}`, { like_list:state.userData.like_list })
+        .then(response => {
+          commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  removeLikeBy({ state, commit }, work) {
+    return new Promise((resolve, reject) => {
+      commit('removeLikeBy', work)
       this.$axios.put(`/works/${work.id}`, { like_by:state.workLikeBy })
+        .then(response => {
+          // commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  updateReaders({ state, commit }, work) {
+    return new Promise((resolve, reject) => {
+      commit('updateReaders', work)
+      this.$axios.put(`/works/${work.id}`, { readers:state.workReaders })
         .then(response => {
           // commit('setUser', response.data)
           resolve(response.data)

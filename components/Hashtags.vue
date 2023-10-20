@@ -1,5 +1,6 @@
 <template>
   <v-slide-group
+    v-model="hashtagActived"
     active-class="secondary"
     prev-icon="mdi-arrow-left-bold-box"
     next-icon="mdi-arrow-right-bold-box"
@@ -9,6 +10,7 @@
       v-for="hashtag in hashtags"
       :key="hashtag.id"
       v-slot="{ active, toggle }"
+      :value="hashtag.name"
     >
       <v-btn
         class="mx-1 my-1 rounded-lg"
@@ -19,6 +21,7 @@
         small
         @click="toggle"
         v-text="hashtag.name"
+        
       ></v-btn>
     </v-slide-item>
   </v-slide-group>
@@ -28,11 +31,26 @@
 export default {
   name: 'Hashtags',
   props: [],
-  data: () => ({}),
+  data: () => ({
+    hashtagActived: null
+  }),
   computed: {
     hashtags() {
       return this.$store.state.hashtags.data
     },
+  },
+  methods: {
+    sendHashtag(data) {
+      this.$emit('hashtag-actived', data);
+    }
+  },
+  watch: {
+    hashtagActived(newValue, oldValue) {
+      // Di sini Anda dapat menjalankan metode atau tindakan yang Anda inginkan
+      // console.log('Nilai berubah dari', oldValue, 'ke', newValue);
+      // console.log();
+      this.sendHashtag(newValue);
+    }
   },
 }
 </script>
