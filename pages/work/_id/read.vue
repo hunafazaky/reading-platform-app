@@ -60,6 +60,16 @@
                   #{{ work?.category[0] }}
                   </span>
                 </div>
+                <!-- {{ rating }} -->
+                <div class="my-5">
+                  <v-rating
+                    hover
+                    :length="5"
+                    :size="32"
+                    v-model="rating"
+                    @input="sendRating"
+                  />
+                </div>
                 <!-- <div class="my-5" v-if="work?.keyword.hashtags.length > 0">
                   <p class="caption font-weight-bold my-0">Tagar :</p>
                   <v-chip-group column class="mb-4">
@@ -94,7 +104,8 @@ export default {
   data: () => ({
     me: {},
     showPopZoom: false,
-    loading: true
+    loading: true,
+    rating: null
   }),
   computed: {
     work() {
@@ -121,14 +132,35 @@ export default {
   },
   methods: {
     getMe() {
-      this.me = this.$store.state.users.me
+      this.me = this.$store.getters['me']
+      // this.getRating();
     },
+    getRating() {
+      const rate_list = this.$store.getters['me'].rate_list.find(item => item.work_id === this.$route.params.id)
+      this.rating = rate_list?.rating
+      // if (this.$store.getters['me']?.rate_list) {
+      //   // console.log(this.rating);
+      // }
+      // else {
+      //   this.rating = null
+      // }
+    },  
     getWorkById() {
       this.$store.dispatch('getWorkById', this.$route.params.id)
       .then((data) => {
         this.$store.dispatch('updateReadList', data.id)
         this.$store.dispatch('updateReaders', data)
       })
+    },
+    sendRating() {
+      // console.log(this.rating);
+      this.$store.dispatch('updateRateList', this.rating);
+      this.$store.dispatch('updateRateBy', this.rating);
+      // this.$store.dispatch('getWorkById', this.$route.params.id)
+      // .then((data) => {
+      //   this.$store.dispatch('updateRateList', data.id, this.rating)
+      //   this.$store.dispatch('updateRateBy', data, this.rating)
+      // })
     },
     hashtag(id) {
       return this.$store.state.hashtags.data.find((hashtag) => hashtag.id == id)
@@ -141,6 +173,7 @@ export default {
   mounted() {
     this.getMe()
     this.getWorkById();
+    this.getRating()
     if (!this.me) this.$router.push('/')
   },
 }

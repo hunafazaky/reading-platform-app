@@ -55,7 +55,7 @@
                     v-for="(work, i) in me.work_list"
                     v-if="i < 5"
                     :key="work._id"
-                    :to="`/${work._id}/read`"
+                    :to="`/work/${work._id}/read`"
                     class="text-decoration-none text--secondary"
                   >
                   <p v-text="work.title"></p>

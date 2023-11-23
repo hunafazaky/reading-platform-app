@@ -6,15 +6,10 @@ export const state = () => ({
   userData: null,
   workReaders: null,
   workLikeBy: null,
+  workRateBy: null,
 })
 
 export const mutations = {
-  // increment(state) {
-  //   state.counter++
-  // },
-  // decrement(state) {
-  //   state.counter--
-  // },
   setWorks(state, data) {
     state.worksData = data
   },
@@ -59,6 +54,18 @@ export const mutations = {
     const newData = state.userData.like_list.filter((item => item._id !== data))
     // newData.unshift(data)
     state.userData.like_list = newData
+  },
+  updateRateList(state, rating) {
+    const newData = state.userData.rate_list.filter((item => item.work_id !== state.workData.id))
+    newData.unshift({work_id:state.workData.id, rating:rating})
+    state.userData.rate_list = newData
+  },
+  updateRateBy(state, rating) {
+    const newData = state.workData.rate_by.filter((item => item.user_id !== state.userData.id))
+    newData.unshift({user_id:state.userData.id, rating:rating})
+    // state.userData.read_list = newData
+    // state.workRateBy = newData
+    state.workData.rate_by = newData
   },
 }
 
@@ -141,6 +148,20 @@ export const actions = {
         })
     })
   },
+  updateReaders({ state, commit }, work) {
+    return new Promise((resolve, reject) => {
+      commit('updateReaders', work)
+      this.$axios.put(`/works/${work.id}`, { readers:state.workReaders })
+        .then(response => {
+          // commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
   updateLikeList({ state, commit }, workId) {
     return new Promise((resolve, reject) => {
       commit('updateLikeList', workId)
@@ -197,10 +218,38 @@ export const actions = {
         })
     })
   },
-  updateReaders({ state, commit }, work) {
+  // updateRateList({ state, commit }, workId, rating) {
+  //   return new Promise((resolve, reject) => {
+  //     commit('updateRateList', workId, rating)
+  //     this.$axios.put(`/works/${workId}`, { readers:state.workReaders })
+  //       .then(response => {
+  //         // commit('setUser', response.data)
+  //         resolve(response.data)
+  //       })
+  //       .catch(error => {
+  //         console.error(error)
+  //         reject(error)
+  //       })
+  //   })
+  // },
+  updateRateList({ state, commit }, rating) {
     return new Promise((resolve, reject) => {
-      commit('updateReaders', work)
-      this.$axios.put(`/works/${work.id}`, { readers:state.workReaders })
+      commit('updateRateList', rating)
+      this.$axios.put(`/users/${state.userData.id}`, { rate_list:state.userData.rate_list })
+        .then(response => {
+          commit('setUser', response.data)
+          resolve(response.data)
+        })
+        .catch(error => {
+          console.error(error)
+          reject(error)
+        })
+    })
+  },
+  updateRateBy({ state, commit }, rating) {
+    return new Promise((resolve, reject) => {
+      commit('updateRateBy', rating)
+      this.$axios.put(`/works/${state.workData.id}`, { rate_by:state.workData.rate_by })
         .then(response => {
           // commit('setUser', response.data)
           resolve(response.data)
