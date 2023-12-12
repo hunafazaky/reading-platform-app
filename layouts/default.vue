@@ -72,43 +72,6 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-    <!-- <v-app-bar v-if="height <= 500" dark fixed app>
-      <v-spacer />
-      <v-text-field
-        class="ma-2"
-        solo
-        dense
-        v-model="search"
-        append-icon="mdi-magnify"
-        label="Cari Sesuatu..."
-        single-line
-        hide-details
-      ></v-text-field>
-      <v-spacer />
-      <v-menu offset-y>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on">
-            <v-avatar class="mr-1" color="white" size="24">
-              <v-img :src="me.profile?.img_profile"></v-img>
-            </v-avatar>
-          </v-btn>
-        </template>
-        <v-list dark>
-          <v-list-item :to="`/user/${me?.username}`" router exact>
-            <v-list-item-title>
-              <v-icon small left>mdi-account-circle</v-icon>
-              Profile</v-list-item-title
-            >
-          </v-list-item>
-          <v-list-item to="/config" router exact>
-            <v-list-item-title>
-              <v-icon small left>mdi-cog</v-icon>
-              Pengaturan</v-list-item-title
-            >
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </v-app-bar> -->
     <v-main class="mb-12">
       <v-container>
         <Nuxt />
@@ -141,7 +104,6 @@ export default {
   name: 'DefaultLayout',
   data() {
     return {
-      me: {},
       search: '',
       items: [
         {
@@ -186,14 +148,22 @@ export default {
           return 800
       }
     },
-  },
-  methods: {
-    getMe() {
-      this.me = this.$store.state.users.me
+    me() {
+      if (this.$store.getters['me']) {
+        return this.$store.getters['me']
+      } else {
+        this.$router.push('/');
+        return []; 
+      }
     },
   },
+  methods: {
+    // getMe() {
+    //   this.me = this.$store.state.users.me
+    // },
+  },
   mounted() {
-    this.getMe()
+    // this.getMe()
   },
 }
 </script>

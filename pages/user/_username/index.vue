@@ -2,12 +2,12 @@
   <v-row justify="center" align="center">
     <PopZoom
       maxWidth="500px"
-      :image="user.profile?.img_profile"
+      :image="me.photo"
       :showPopZoom="showPopZoom"
       @hidePopZoom="showPopZoom = false"
     />
     <PopZoom
-      :image="user.profile?.img_profile"
+      :image="me.photo"
       :showPopConfirm="showPopConfirm"
       @hidePopConfirm="showPopConfirm = false"
     />
@@ -24,55 +24,70 @@
           style="inset: 0; position: absolute"
           @click="showPopZoom = true"
         >
-          <v-img :src="user.profile?.img_profile"></v-img>
+          <v-img :src="me.photo"></v-img>
         </v-avatar>
       </v-sheet>
     </v-col>
     <v-col cols="8">
       <v-card rounded="lg" outlined>
-        <v-card-title>
-          <p class="my-1 text-capitalize" v-text="user.profile?.pen_name"></p>
-          <v-divider></v-divider>
-          <p class="my-1 font-weight-light text-capitalize">Username</p>
-        </v-card-title>
+        <v-card-text>
+          <div class="d-flex">
+            <p class="my-1 font-weight-black overline">
+              Pen Name / Username
+            </p>
+            <v-spacer></v-spacer>
+            <p
+              class="my-1 font-weight-black overline"
+            >{{ me.pen_name }} / {{ me.username }}</p>
+          </div>
+        </v-card-text>
         <v-divider></v-divider>
         <v-card-text>
           <div class="d-flex">
-            <p class="my-1 font-weight-light text-capitalize">Username</p>
-            <v-spacer></v-spacer>
-            <p
-              class="my-1 font-weight-bold"
-              v-text="user.account?.username"
-            ></p>
-          </div>
-          <div class="d-flex">
-            <p class="my-1 font-weight-light text-capitalize">
-              Penulis Favorit
+            <p class="my-1 font-weight-light">
+              Jumlah karya yang ditulis
             </p>
             <v-spacer></v-spacer>
             <p
-              class="my-1 font-weight-bold"
-              v-text="user.activity?.sub_writers.length"
+              class="my-1 font-weight-light"
+              v-text="me.work_list.length"
             ></p>
           </div>
           <div class="d-flex">
-            <p class="my-1 font-weight-light text-capitalize">Pembaca Setia</p>
-            <v-spacer></v-spacer>
-            <p
-              class="my-1 font-weight-bold"
-              v-text="user.activity?.sub_readers.length"
-            ></p>
-          </div>
-          <div class="d-flex">
-            <p class="my-1 font-weight-light text-capitalize">
-              Jumlah Karya Tulis
+            <p class="my-1 font-weight-light">
+              Jumlah karya yang dibaca
             </p>
             <v-spacer></v-spacer>
             <p
-              class="my-1 font-weight-bold"
-              v-text="user.activity?.writings.length"
+              class="my-1 font-weight-light"
+              v-text="me.read_list.length"
             ></p>
           </div>
+          <div class="d-flex">
+            <p class="my-1 font-weight-light">
+              Jumlah karya yang disimpan
+            </p>
+            <v-spacer></v-spacer>
+            <p
+              class="my-1 font-weight-light"
+              v-text="me.like_list.length"
+            ></p>
+          </div>
+          <div class="d-flex">
+            <p class="my-1 font-weight-light">
+              Jumlah karya yang diberi rating
+            </p>
+            <v-spacer></v-spacer>
+            <p
+              class="my-1 font-weight-light"
+              v-text="me.rate_list.length"
+            ></p>
+          </div>
+          <template v-for="work in me.read_list">
+            <div :key="work._id">
+              {{ work.category }}
+            </div>
+          </template>
         </v-card-text>
       </v-card>
     </v-col>
@@ -83,22 +98,29 @@
           <v-row
             justify="start"
             class="px-4 py-1"
-            v-if="user.activity?.writings.length > 0"
+            v-if="me.work_list.length > 0"
           >
             <v-col
-              v-for="work_id in user.activity?.writings"
-              :key="work_id"
+              v-for="work in me.work_list"
+              :key="work._id"
               class="px-1 py-0"
               cols="4"
               sm="4"
               md="3"
               xl="2"
             >
-              <WorkCard
-                :work="getWorkById(work_id)"
+              <!-- <WorkCard
+                :work="getWorkById(work._id)"
                 :wordLimit="{ title: 100, text: 0 }"
                 :miniVariant="true"
-              />
+              /> -->
+              <WorkCard
+                  :work="work"
+                  :wordLimit="{ title: 100, text: 0 }"
+                  :miniVariant="false"
+                  :mutation="false"
+                  @remove-work="deleteWork"
+                />
             </v-col>
           </v-row>
           <template v-else>
@@ -121,28 +143,29 @@ export default {
   data: () => ({
     showPopZoom: false,
     showPopConfirm: false,
-    user: {},
+    // user: {},
     work: {},
   }),
   computed: {
-    // user() {
-    //   return this.$store.state.users.data.find(
-    //     (user) => user.account?.username === this.$route.params.username
-    //   )
-    // },
-    // works() {
-    //   return this.$store.state.works.data
-    // },
+    me() {
+      if (this.$store.getters['me']) {
+        // this.loading.user = false
+        return this.$store.getters['me']
+      } else {
+        this.$router.push('/');
+        return []; 
+      }
+    },
   },
   methods: {
-    getMe() {
-      this.me = this.$store.state.users.me
-    },
+    // getMe() {
+    //   this.me = this.$store.state.users.me
+    // },
     getUserByUsername() {
       this.$axios
         .get(`/users?username=${this.$route.params.username}`)
         .then((user) => {
-          this.user = user.data[0]
+          this.user = me.data[0]
         })
     },
     getWorkById(work_id) {
@@ -163,8 +186,8 @@ export default {
   },
   mounted() {
     this.getUserByUsername()
-    this.getMe()
-    if (!this.me.account) this.$router.push('/')
+    // this.getMe()
+    // if (!this.me.account) this.$router.push('/')
   },
   component: { PopZoom, PopConfirm },
 }
