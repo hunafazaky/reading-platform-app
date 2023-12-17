@@ -56,12 +56,13 @@
                   <p class="caption font-weight-bold my-0">Kategori :</p>
                   <span
                     class="overline font-weight-bold"
+                    v-for="category in work?.category"
                   >
-                  #{{ work?.category[0] }}
+                  #{{ category }}
                   </span>
                 </div>
-                <!-- {{ rating }} -->
                 <div class="my-5">
+                  <p class="caption font-weight-bold my-0">Berikan Penilaian Anda</p>
                   <v-rating
                     hover
                     :length="5"

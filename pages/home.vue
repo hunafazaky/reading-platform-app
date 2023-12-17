@@ -3,11 +3,11 @@
     <LoadingPage :loading="loading.page"/>
     <v-row :justify="works?.length > 0 ? 'start' : 'center'">
       <v-col cols="8">
-        <p class="overline text-center text-secondary ma-4">Rekomendasi</p>
-        <v-row class="mt-0">
+        <p class="overline text-center text-secondary ma-4" v-if="foryou?.length > 0">Rekomendasi</p>
+        <v-row class="mt-0" v-if="foryou?.length > 0">
           <LoadingComponent v-if="loading.work" :loading="loading.work" />
           <template v-if="!loading.work">
-            <template v-if="foryou?.length > 0">
+            <template>
               <v-col
                 v-for="(work, i) in foryou"
                 v-if="i < 6"
@@ -24,13 +24,10 @@
                 />
               </v-col>
             </template>
-            <template v-else>
-              <p class="overline text-center text-secondary ma-4">Memuat...</p>
-            </template>
           </template>
         </v-row>
         <!-- {{ foryou }} -->
-        <p class="overline text-center text-secondary ma-4">Paling Baru</p>
+        <p class="overline text-center text-secondary ma-4" v-if="foryou?.length > 0">Paling Baru</p>
         <v-row class="mt-0">
           <LoadingComponent v-if="loading.work" :loading="loading.work" />
           <template v-if="!loading.work">

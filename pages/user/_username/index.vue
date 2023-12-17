@@ -83,11 +83,11 @@
               v-text="me.rate_list.length"
             ></p>
           </div>
-          <template v-for="work in me.read_list">
+          <!-- <template v-for="work in me.read_list">
             <div :key="work._id">
               {{ work.category }}
             </div>
-          </template>
+          </template> -->
         </v-card-text>
       </v-card>
     </v-col>
