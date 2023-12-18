@@ -73,6 +73,89 @@ export const state = () => ({
       name: 'Drama'
     }
   ]
+  // data: [
+  //   {
+  //     id: 0,
+  //     name: 'Natural Language Processing (NLP)'
+  //   },
+  //   {
+  //     id: 1,
+  //     name: 'Introduction'
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Pre-processing'
+  //   },
+  //   {
+  //     id: 3,
+  //     name: 'Advanced NLP'
+  //   },
+  //   {
+  //     id: 4,
+  //     name: 'Algorithm'
+  //   },
+  //   {
+  //     id: 5,
+  //     name: 'Structured Representation'
+  //   },
+  //   {
+  //     id: 6,
+  //     name: 'Natural Language Understanding (NLU)'
+  //   },
+  //   {
+  //     id: 7,
+  //     name: 'Natural Language Generation (NLG)'
+  //   },
+  //   {
+  //     id: 8,
+  //     name: 'Machine Learning (ML)'
+  //   },
+  //   {
+  //     id: 9,
+  //     name: 'ML for NLP'
+  //   },
+  //   {
+  //     id: 10,
+  //     name: 'Deep Learning (DL)'
+  //   },
+  //   {
+  //     id: 11,
+  //     name: 'DL for NLP'
+  //   },
+  //   {
+  //     id: 12,
+  //     name: 'Implementation'
+  //   },
+  //   {
+  //     id: 13,
+  //     name: 'Search Engine'
+  //   },
+  //   {
+  //     id: 14,
+  //     name: 'Machine Translation'
+  //   },
+  //   {
+  //     id: 15,
+  //     name: 'Sentimen Analysis'
+  //   },
+  //   {
+  //     id: 16,
+  //     name: 'Text Sumamrization'
+  //   },
+  //   {
+  //     id: 17,
+  //     name: 'Chatbot'
+  //   },
+  //   {
+  //     id: 18,
+  //     name: 'Spelling Correction'
+  //   },
+  //   {
+  //     id: 19,
+  //     name: 'Text to Speech'
+  //   },
+
+  // ]
 })
 
 export const mutations = {

@@ -194,17 +194,32 @@ export default {
     //     }
     //   }
     // },
-    postWork() {
-      this.work.writer = this.me.id;
-      if (this.work.cover === null) this.work.cover = '/temp-profile.webp';
-      this.$store.dispatch('postWork', this.work).then((data) => {
-        // this.works = this.$store.getters['works'];
-        // this.loading = false;
-        this.success = true
-        setTimeout(() => {
-          this.$router.push('/home')
-        }, 2000)
-      });
+    async postWork() {
+      const file = this.file;
+      const storageRef = this.$fireModule.storage().ref();
+      const fileRef = storageRef.child(file.name);
+
+      try {
+        // Upload file to Firebase Storage
+        await fileRef.put(file);
+
+        // Get download URL
+        const downloadURL = await fileRef.getDownloadURL();
+        this.work.cover = downloadURL;
+        this.work.writer = this.me.id;
+        if (this.work.cover === null) this.work.cover = '/temp-profile.webp';
+        this.$store.dispatch('postWork', this.work).then((data) => {
+          // this.works = this.$store.getters['works'];
+          // this.loading = false;
+          this.success = true
+          setTimeout(() => {
+            this.$router.push('/home')
+          }, 2000)
+        });
+        console.log('File uploaded. Download URL:', downloadURL);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
       // this.$axios
       //   .post(`/works`, this.work)
       //   // .then((data) => {
@@ -222,7 +237,7 @@ export default {
       //     }, 2000)
       //   })
     },
-    fileToImage() {
+    async fileToImage() {
       if (this.file) {
         this.work.cover = URL.createObjectURL(this.file)
       }

@@ -38,8 +38,25 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/firebase',
   ],
+
+  firebase: {
+    config: {
+      apiKey: "AIzaSyB3Kd_VJwuQulHkvh-60j4VveO0EKnW-7Y",
+      authDomain: "app-reading.firebaseapp.com",
+      projectId: "app-reading",
+      storageBucket: "app-reading.appspot.com",
+      messagingSenderId: "719319631852",
+      appId: "1:719319631852:web:59720547feb96c0afaa2c9",
+      measurementId: "G-TDY2EL0H27"
+    },
+    services: {
+      auth: true, // Just as example. Can be any other service.
+      storage: true, // Just as example. Can be any other service.
+    }
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
