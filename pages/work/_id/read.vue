@@ -62,7 +62,7 @@
                   #{{ category }}
                   </span>
                 </div>
-                <div class="my-5">
+                <div class="my-5" v-if="work?.attachment">
                   <p class="caption font-weight-bold my-0">Lampiran :</p>
                   <v-btn
                     color="error"

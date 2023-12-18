@@ -17,7 +17,7 @@
               >
                 <v-img
                   style="inset: 0; position: absolute"
-                  v-if="file"
+                  v-if="fileOfCover"
                   height="100%"
                   cover
                   :src="work.cover"
@@ -90,7 +90,7 @@
                 label="Cover"
                 hint="Direkomendasikan cover dengan ratio 13:19"
                 persistent-hint
-                v-model="file"
+                v-model="fileOfCover"
                 @change="fileToImage"
               ></v-file-input>
               <v-btn-toggle
@@ -128,6 +128,7 @@
                     label="Link"
                     hint="Lampirkan tautan (Optional)"
                     persistent-hint
+                    required
                     v-model="work.attachment.link"
                   ></v-text-field>
                 </v-col>
@@ -144,7 +145,7 @@
                 label="File PDF"
                 hint="Lampirkan file PDF (Optional)"
                 persistent-hint
-                v-model="attachmentFile"
+                v-model="fileOfAttachment"
                 ></v-file-input>
                 <!-- @change="fileToLink" -->
             </v-col>
@@ -160,6 +161,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
+            :loading="loading"
             class="ma-2 px-4"
             color="success"
             :disabled="!work.title || !work.text"
@@ -188,9 +190,9 @@ export default {
   name: 'Write',
   data: () => ({
     // me: {},
-    loading: true,
-    file: null,
-    attachmentFile: null,
+    loading: false,
+    fileOfCover: null,
+    fileOfAttachment: null,
     success: false,
     work: {
       title: null,
@@ -234,27 +236,9 @@ export default {
     },
   },
   methods: {
-    // getMe() {
-    //   this.me = this.$store.state.users.me
-    //   if (!this.me.id) this.$router.push('/')
-    //   else {
-    //     this.loading = false
-    //   }
-    // },
-    // setWrittenBy() {
-    //   if (this.me.id) {
-    //     this.work.writer = {
-    //       id: this.me.id,
-    //       username: this.me.account.username,
-    //       img_profile: this.me.profile.img_profile,
-    //       pen_name: this.me.profile.pen_name,
-    //     }
-    //   }
-    // },
     async uploadFileToStorage(file) {
       const storageRef = this.$fireModule.storage().ref();
       const fileRef = storageRef.child(file.name);
-
       try {
         // Upload file to Firebase Storage
         await fileRef.put(file);
@@ -267,24 +251,31 @@ export default {
       }
     },
     async postWork() {
+      this.loading = true;
       try {
-        // Upload main file
-        this.work.cover = await this.uploadFileToStorage(this.file);
         this.work.writer = this.me.id;
-
-        // Set default cover if necessary
-        if (this.work.cover === null) {
+        
+        // Upload cover
+        if (this.fileOfCover) {
+          this.work.cover = await this.uploadFileToStorage(this.fileOfCover);
+        } else {
           this.work.cover = '/temp-profile.webp';
         }
 
-        // Upload attachment file if attachment type is 1
-        if (this.attachment_type === 1) {
-          const attachmentLink = await this.uploadFileToStorage(this.attachmentFile);
-          this.work.attachment = { title: this.attachmentFile.name, link: attachmentLink };
+        // Upload attachment
+        if (this.fileOfAttachment) {
+          const attachmentLink = await this.uploadFileToStorage(this.fileOfAttachment);
+          this.work.attachment = { title: this.fileOfAttachment.name, link: attachmentLink };
+        } else if (this.work.attachment.link) {
+          if (!this.work.attachment.title) {
+            this.work.attachment.title = 'Lampiran'
+          }
+        } else {
+          this.work.attachment = {};
         }
 
         // Dispatch postWork action
-        const data = await this.$store.dispatch('postWork', this.work);
+        await this.$store.dispatch('postWork', this.work);
 
         // Handle success
         this.success = true;
@@ -300,10 +291,10 @@ export default {
 // Usage
 // this.uploadWork();
     // async postWork() {
-    //   const file = this.file;
+    //   const file = this.fileOfCover;
     //   const storageRef = this.$fireModule.storage().ref();
     //   const fileRef = storageRef.child(file.name);
-    //   const fileRef2 = storageRef.child(this.attachmentFile.name);
+    //   const fileRef2 = storageRef.child(this.fileOfAttachment.name);
 
     //   try {
     //     // Upload file to Firebase Storage
@@ -315,10 +306,10 @@ export default {
     //     this.work.writer = this.me.id;
     //     if (this.work.cover === null) this.work.cover = '/temp-profile.webp';
     //     if (this.attachment_type === 1) {
-    //       await fileRef2.put(this.attachmentFile);
+    //       await fileRef2.put(this.fileOfAttachment);
     //       const link = await fileRef2.getDownloadURL();
     //       this.work.attachment = {
-    //         title: this.attachmentFile.name, link
+    //         title: this.fileOfAttachment.name, link
     //       }
     //     }
     //     this.$store.dispatch('postWork', this.work).then((data) => {
@@ -351,8 +342,8 @@ export default {
     //   //   })
     // },
     async fileToImage() {
-      if (this.file) {
-        this.work.cover = URL.createObjectURL(this.file)
+      if (this.fileOfCover) {
+        this.work.cover = URL.createObjectURL(this.fileOfCover)
       }
     },
   },
