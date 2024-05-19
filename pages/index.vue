@@ -7,7 +7,7 @@
         <v-img src="/login-image.png" width="100%"></v-img>
       </v-col>
       <v-col cols="12" sm="8" md="4" lg="4">
-        <v-card class="card mb-2" shaped outlined elevation="5">
+        <v-card class="card mb-2" shaped outlined elevation="5" data-netlify=true>
           <v-card-title v-text="form_title"></v-card-title>
           <v-card-text>
             <v-text-field
