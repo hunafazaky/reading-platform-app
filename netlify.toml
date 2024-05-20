@@ -1,4 +1,4 @@
 [[headers]]
   for = "/*"
   [headers.values]
-    Access-Control-Allow-Origin = "https://readingcorner-fahsd3m7.b4a.run/api"
+    Access-Control-Allow-Origin = "*"
