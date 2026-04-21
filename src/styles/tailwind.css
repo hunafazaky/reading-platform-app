@@ -18,11 +18,11 @@
   --color-error: rgb(var(--v-theme-error));
   --color-hz-light: #f2f2f2;
   --color-hz-dark: #0b192c;
-  --color-hz-crimson: #dc143c;
-  --color-hz-dawn: #ff6500;
-  --color-hz-rise: #ffc55a;
   --color-hz-forest: #41a67e;
-  --color-hz-sea: #1055c9;
+  --color-hz-ocean: #1055c9;
+  --color-hz-blaze: #dc143c;
+  --color-hz-dusk: #ff6500;
+  --color-hz-dawn: #ffc55a;
 
   --breakpoint-*: initial;
   --breakpoint-xs: 0px;
