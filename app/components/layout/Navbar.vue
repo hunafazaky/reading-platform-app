@@ -1,41 +1,37 @@
 <template>
-  <v-app-bar color="dark">
-    <v-btn icon="mdi-dots-vertical" variant="text"></v-btn>
-    <v-toolbar-title>Sastra</v-toolbar-title>
-    <v-app-bar-nav-icon
-      variant="text"
-      @click.stop="drawer = !drawer"
-    ></v-app-bar-nav-icon>
-  </v-app-bar>
+  <section v-if="!mobile">
+    <v-app-bar color="dark">
+      <v-app-bar-nav-icon
+        variant="text"
+        @click.stop="drawer = !drawer"
+      ></v-app-bar-nav-icon>
+      <v-toolbar-title>Sastra</v-toolbar-title>
+    </v-app-bar>
+    <v-navigation-drawer
+      :location="mobile ? 'right' : 'left'"
+      color="dark"
+      :rail="!drawer"
+    >
+      <v-list density="compact" nav>
+        <v-list-item
+        v-for="value in nav_list"
+          :prepend-icon="value.icon"
+          :title="value.name"
+          :value="value.name"
+          :to="value.target"
+        ></v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+  </section>
 
-  <v-navigation-drawer
-    v-model="drawer"
-    :location="mobile ? 'right' : undefined"
-    temporary
-  >
-    <!-- <v-list :items="nav_list"></v-list> -->
-    <v-list>
-      <v-tooltip
-        :disabled="!mobile"
-        v-for="(item, index) in nav_list"
-        :key="index"
-        right
-      >
-        <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props" :to="item.target" router exact>
-            <v-list-item-action>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-action>
-            <v-list-item-content>
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
+  <section v-if="mobile">
+    <v-bottom-navigation mode="shift" bg-color="dark">
+      <v-btn value="recent" v-for="item in nav_list" :to="item.target">
+        <v-icon>{{ item.icon }}</v-icon>
         <span>{{ item.name }}</span>
-      </v-tooltip>
-      <v-divider />
-    </v-list>
-  </v-navigation-drawer>
+      </v-btn>
+    </v-bottom-navigation>
+  </section>
 </template>
 
 <script setup lang="ts">
@@ -44,7 +40,7 @@ import { useDisplay } from "vuetify";
 import { nav_list } from "@/utils/constants";
 const { mobile, mdAndUp } = useDisplay();
 
-const drawer = ref(false);
+const drawer = ref(true);
 const group = ref(null);
 
 watch(group, () => {
