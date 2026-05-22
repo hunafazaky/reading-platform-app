@@ -1,6 +1,6 @@
 <template>
   <div>
-    <LoadingPage :loading="loading"/>
+    <LoadingPage :loading="loading" />
     <h1 class="text-center ma-4">Reading App</h1>
     <v-row justify="center" align="center">
       <v-col md="6" lg="5" v-if="height >= 500">
@@ -78,20 +78,20 @@
 </style>
 
 <script>
-import LoadingComponent from '../components/LoadingComponent.vue'
-import LoadingPage from '../components/LoadingPage.vue'
+import LoadingComponent from "../components/LoadingComponent.vue";
+import LoadingPage from "../components/LoadingPage.vue";
 
 export default {
-  layout: 'login',
+  layout: "login",
   data: () => ({
     user: {
-        username: null,
-        password: null,
+      username: null,
+      password: null,
     },
     loginAttempt: false,
     regisAttempt: false,
-    form_title: 'Registrasi',
-    message: '',
+    form_title: "Registrasi",
+    message: "",
     loading: false,
   }),
   components: {
@@ -101,62 +101,79 @@ export default {
   computed: {
     height() {
       switch (this.$vuetify.breakpoint.name) {
-        case 'xs':
-          return 220
-        case 'sm':
-          return 400
-        case 'md':
-          return 500
-        case 'lg':
-          return 600
-        case 'xl':
-          return 800
+        case "xs":
+          return 220;
+        case "sm":
+          return 400;
+        case "md":
+          return 500;
+        case "lg":
+          return 600;
+        case "xl":
+          return 800;
       }
     },
   },
 
   methods: {
     openLoginForm() {
-      this.form_title = 'Login'
+      this.form_title = "Login";
     },
     openRegisForm() {
-      this.form_title = 'Registrasi'
+      this.form_title = "Registrasi";
     },
+    // ... method lain ...
     login() {
       this.loading = true;
       this.$store
-      .dispatch('login', this.user)
-      .then((data) => {
-        // this.loading = false;
-        if (data.id) {
-          this.message = 'Login Berhasil!!';
-          this.loginAttempt = true;
-          this.$router.push('/home');
-        } else {
-          this.message = 'Error: ' + data.message;
-          this.loginAttempt = true;
+        .dispatch("login", this.user)
+        .then((data) => {
+          // Cek apakah data.user ada dan memiliki id
+          if (data.user && data.user.id) {
+            this.message = "Login Berhasil!!";
+            this.loginAttempt = true;
+            this.$router.push("/home");
+          } else {
+            // Fallback message jika ada error dari backend
+            this.message = "Error: " + (data.message || "Terjadi kesalahan");
+            this.loginAttempt = true;
+            this.loading = false;
+          }
+        })
+        .catch((err) => {
+          // Tangkap response error dari axios (jika status 40x / 50x)
+          const errorMsg =
+            err.response && err.response.data && err.response.data.message
+              ? err.response.data.message
+              : err;
+          alert(errorMsg);
           this.loading = false;
-        };
-      })
-      .catch((err) => {
-        alert(err)
-        this.loading = false;
-      });
+        });
     },
     regis() {
       this.regisAttempt = true;
       this.loading = true;
       this.$store
-      .dispatch('regis', this.user)
-      .then((data) => {
-        this.loading = false;
-        if (data.id) {
-          this.message = 'Registrasi Berhasil!!';
-          this.login();
-        } else this.message = 'Error: ' + data.message;
-      })
-      .catch((err) => alert(err));
+        .dispatch("regis", this.user)
+        .then((data) => {
+          this.loading = false;
+          // Cek apakah data.user ada dan memiliki id
+          if (data.user && data.user.id) {
+            this.message = "Registrasi Berhasil!!";
+            this.login();
+          } else {
+            this.message = "Error: " + (data.message || "Terjadi kesalahan");
+          }
+        })
+        .catch((err) => {
+          const errorMsg =
+            err.response && err.response.data && err.response.data.message
+              ? err.response.data.message
+              : err;
+          alert(errorMsg);
+          this.loading = false;
+        });
     },
   },
-}
+};
 </script>
