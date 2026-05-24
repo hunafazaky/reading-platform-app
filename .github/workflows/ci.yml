@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node: [18]
+        node: [24]
 
     steps:
       - name: Checkout repository
