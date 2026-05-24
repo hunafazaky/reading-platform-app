@@ -38,7 +38,7 @@ jobs:
       # (The 'corepack enable' step is no longer needed and can be deleted)
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile cross-env NODE_OPTIONS=--openssl-legacy-provider # Add NODE_OPTIONS to address OpenSSL issues in Node 24
 
       - name: Run linter
         run: pnpm lint
