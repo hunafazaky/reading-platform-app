@@ -13,22 +13,22 @@
               label="Username"
               type="text"
               required
-            ></v-text-field>
+            />
             <v-text-field
               dense
               v-model="user.password"
               label="Password"
               type="password"
               required
-            ></v-text-field>
-            <!-- <v-text-field
+            />
+            <v-text-field
               v-if="formType == 'Sign Up'"
               dense
               v-model="user.password"
               label="Password Confirmation"
               type="password-confirmation"
               required
-            ></v-text-field> -->
+            />
           </v-card-text>
           <v-card-actions class="ma-2">
             <v-btn small :color="btnColor" @click="handleSubmit">
@@ -106,18 +106,12 @@ export default {
 
   methods: {
     handleSubmit() {
-      if (this.formType === "Sign Up") {
-        this.signup();
-      } else {
-        this.signin();
-      }
+      if (this.formType === "Sign Up") this.signup();
+      if (this.formType === "Sign In") this.signin();
     },
     changeFormType() {
-      if (this.formType === "Sign Up") {
-        this.formType = "Sign In";
-      } else {
-        this.formType = "Sign Up";
-      }
+      if (this.formType === "Sign Up") this.formType = "Sign In";
+      if (this.formType === "Sign In") this.formType = "Sign Up";
     },
     // ... method lain ...
     signin() {
