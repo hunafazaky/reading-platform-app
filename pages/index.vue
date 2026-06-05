@@ -24,9 +24,9 @@
             <v-text-field
               v-if="formType == 'Sign Up'"
               dense
-              v-model="user.password"
-              label="Password Confirmation"
-              type="password-confirmation"
+              v-model="retype"
+              label="Password Retype"
+              type="password"
               required
             />
           </v-card-text>
@@ -74,6 +74,7 @@ export default {
       username: null,
       password: null,
     },
+    retype: null,
     signInAttempt: false,
     signUpAttempt: false,
     formType: "Sign Up",
@@ -106,12 +107,10 @@ export default {
 
   methods: {
     handleSubmit() {
-      if (this.formType === "Sign Up") this.signup();
-      if (this.formType === "Sign In") this.signin();
+      this.formType === "Sign Up" ? this.signup() : this.signin();
     },
     changeFormType() {
-      if (this.formType === "Sign Up") this.formType = "Sign In";
-      if (this.formType === "Sign In") this.formType = "Sign Up";
+      this.formType = this.formType === "Sign Up" ? "Sign In" : "Sign Up";
     },
     // ... method lain ...
     signin() {
@@ -142,6 +141,10 @@ export default {
         });
     },
     signup() {
+      if (this.user.password !== this.retype) {
+        alert("Password dan Password Retype harus sama!");
+        return;
+      }
       this.signUpAttempt = true;
       this.loading = true;
       this.$store
