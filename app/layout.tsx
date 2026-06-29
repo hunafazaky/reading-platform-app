@@ -3,7 +3,7 @@ import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
+// import { ThemeToggle } from "@/components/theme-toggle";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -53,9 +53,6 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div>
-              <ThemeToggle />
-            </div>
             {children}
           </ThemeProvider>
         </body>
