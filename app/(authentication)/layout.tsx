@@ -11,7 +11,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PaMacha",
+  title: "Reading Platform",
   description: "Centralized App for Readers",
 };
 
@@ -36,7 +36,7 @@ export default function RootLayout({
         <body className="min-h-full flex flex-col">
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
+            defaultTheme="dark"
             disableTransitionOnChange
           >
             {children}
