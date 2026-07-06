@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +13,83 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function Authentication() {
+  interface UserDataProps {
+    email?: string;
+    pen_name?: string;
+    password?: string;
+    password2?: string;
+  }
+
   const [isSignIn, setIsSignIn] = useState(true);
+  const [userData, setUserData] = useState<UserDataProps>({
+    email: "",
+    pen_name: "",
+    password: "",
+    password2: "",
+  });
+  // const [isSignIn, setIsSignIn] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleFetch = async (route: string, userData: object) => {
+    try {
+      const res = await fetch(route, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...userData,
+        }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message);
+      console.log(`result data:`, result);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : "Unknown Error Occured.";
+      console.log(`Connection Failed: ${message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password2, pen_name, ...cleanUserData } = userData;
+    console.log("Data yang siap dikirim ke API:", cleanUserData);
+    await handleFetch("/api/signin", cleanUserData);
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setLoading(true);
+
+    if (userData.password !== userData.password2) {
+      setStatus("Password and Retype Password are different.");
+      return;
+    }
+
+    console.log("Data yang siap dikirim ke API:", userData);
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password2, ...cleanUserData } = userData;
+    console.log("Data yang siap dikirim ke API:", cleanUserData);
+    await handleFetch("/api/signup", cleanUserData);
+  };
 
   return (
     <div className="flex flex-col justify-center items-center min-h-dvh">
@@ -24,14 +100,17 @@ export default function Authentication() {
             {isSignIn ? "Get into your account" : "Create new account"}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <form>
+        <form onSubmit={isSignIn ? handleSignIn : handleSignUp}>
+          <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
+                  name="email"
+                  value={userData.email}
+                  onChange={handleChange}
                   placeholder="user@example.com"
                   required
                 />
@@ -49,7 +128,14 @@ export default function Authentication() {
                         Forgot your password?
                       </a>
                     </div>
-                    <Input id="password" type="password" required />
+                    <Input
+                      id="password"
+                      type="password"
+                      name="password"
+                      value={userData.password}
+                      onChange={handleChange}
+                      required
+                    />
                   </div>
                 </section>
               ) : (
@@ -58,7 +144,10 @@ export default function Authentication() {
                     <Label htmlFor="email">Pen Name</Label>
                     <Input
                       id="pen_name"
-                      type="pen_name"
+                      type="text"
+                      name="pen_name"
+                      value={userData.pen_name}
+                      onChange={handleChange}
                       placeholder="Your Pen Name"
                       required
                     />
@@ -66,36 +155,54 @@ export default function Authentication() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     <div className="grid gap-2">
                       <Label htmlFor="password">Password</Label>
-                      <Input id="password" type="password" required />
+                      <Input
+                        id="password"
+                        type="password"
+                        name="password"
+                        value={userData.password}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor="password-2">Retype Password</Label>
-                      <Input id="password-2" type="password-2" required />
+                      <Label htmlFor="password2">Retype Password</Label>
+                      <Input
+                        id="password2"
+                        type="password"
+                        name="password2"
+                        value={userData.password2}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                     <div className="md:col-span-2">
                       <p className="ml-auto inline-block text-sm opacity-70">
                         Minimum 8 characters, including at least 1 uppercase
                         letter and 1 number.
                       </p>
+                      <p className="text-red-400">{status}</p>
                     </div>
                   </div>
                 </section>
               )}
             </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            {isSignIn ? "Sign In" : "Sign Up"}
-          </Button>
-          <CardAction>
-            Or
-            <Button variant="link" onClick={() => setIsSignIn((prev) => !prev)}>
-              {isSignIn ? "Sign Up" : "Sign In"}
+          </CardContent>
+          <CardFooter className="flex-col gap-2">
+            <Button type="submit" className="w-full">
+              {isSignIn ? "Sign In" : "Sign Up"}
             </Button>
-            {isSignIn ? "to create new account" : "to get into your account"}
-          </CardAction>
-        </CardFooter>
+            <CardAction>
+              Or
+              <Button
+                variant="link"
+                onClick={() => setIsSignIn((prev) => !prev)}
+              >
+                {isSignIn ? "Sign Up" : "Sign In"}
+              </Button>
+              {isSignIn ? "to create new account" : "to get into your account"}
+            </CardAction>
+          </CardFooter>
+        </form>
       </Card>
     </div>
   );
