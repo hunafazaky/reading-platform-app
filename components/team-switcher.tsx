@@ -51,7 +51,7 @@ export function TeamSwitcher({
                 <span className="truncate font-medium">{activeTeam.name}</span>
                 <span className="truncate text-xs">{activeTeam.plan}</span>
               </div>
-              <CaretUpDownIcon className="ml-auto" />
+              {/* <CaretUpDownIcon className="ml-auto" /> */}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent

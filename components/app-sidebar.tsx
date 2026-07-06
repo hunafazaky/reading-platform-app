@@ -1,147 +1,78 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
+import Link from "next/link";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
-import { NavUser } from "@/components/nav-user"
-import { TeamSwitcher } from "@/components/team-switcher"
+import { NavMain } from "@/components/nav-main";
+import { NavProjects } from "@/components/nav-projects";
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
+  SidebarMenuButton,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { RowsIcon, WaveformIcon, CommandIcon, TerminalIcon, RobotIcon, BookOpenIcon, GearIcon, CropIcon, ChartPieIcon, MapTrifoldIcon } from "@phosphor-icons/react"
+} from "@/components/ui/sidebar";
+import {
+  BooksIcon,
+  CalendarDotsIcon,
+  PlusIcon,
+  StackPlusIcon,
+  SmileyMeltingIcon,
+  UsersIcon,
+  QuotesIcon  ,
+} from "@phosphor-icons/react";
 
 // This is sample data.
+const brand = {
+  name: "Reading Platform",
+  logo: <BooksIcon />,
+  plan: "Social and Entertainment",
+};
+
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: (
-        <RowsIcon
-        />
-      ),
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: (
-        <WaveformIcon
-        />
-      ),
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: (
-        <CommandIcon
-        />
-      ),
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
+      title: "Discovery",
       url: "#",
-      icon: (
-        <TerminalIcon
-        />
-      ),
+      icon: <QuotesIcon   />,
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Followed",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Timeline",
           url: "#",
         },
         {
-          title: "Settings",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: (
-        <RobotIcon
-        />
-      ),
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          title: "Book of Fame",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Activity",
       url: "#",
-      icon: (
-        <BookOpenIcon
-        />
-      ),
+      icon: <CalendarDotsIcon />,
       items: [
-        {
-          title: "Introduction",
+                {
+          title: "Finished",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "Ongoing",
           url: "#",
         },
         {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: (
-        <GearIcon
-        />
-      ),
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
+          title: "Rated Fiction",
           url: "#",
         },
       ],
@@ -149,37 +80,46 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Create New Story",
       url: "#",
-      icon: (
-        <CropIcon
-        />
-      ),
+      icon: <PlusIcon  />,
     },
     {
-      name: "Sales & Marketing",
+      name: "Create New Series",
       url: "#",
-      icon: (
-        <ChartPieIcon
-        />
-      ),
+      icon: <StackPlusIcon  />,
     },
     {
-      name: "Travel",
+      name: "Following",
       url: "#",
-      icon: (
-        <MapTrifoldIcon
-        />
-      ),
+      icon: <SmileyMeltingIcon />,
+    },
+    {
+      name: "Followers",
+      url: "#",
+      icon: <UsersIcon />,
     },
   ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <SidebarMenuButton
+          size="lg"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        >
+          <Link href="/" className="flex">
+            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground mr-2">
+              {brand.logo}
+            </div>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+              <span className="truncate font-medium">{brand.name}</span>
+              <span className="truncate text-xs">{brand.plan}</span>
+            </div>
+          </Link>
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
@@ -190,5 +130,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

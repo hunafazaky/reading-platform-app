@@ -42,7 +42,7 @@ export function NavProjects({
               </a>
             </SidebarMenuButton>
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              {/* <DropdownMenuTrigger asChild>
                 <SidebarMenuAction
                   showOnHover
                   className="aria-expanded:bg-muted"
@@ -51,7 +51,7 @@ export function NavProjects({
                   />
                   <span className="sr-only">More</span>
                 </SidebarMenuAction>
-              </DropdownMenuTrigger>
+              </DropdownMenuTrigger> */}
               <DropdownMenuContent
                 className="w-fit"
                 side={isMobile ? "bottom" : "right"}
@@ -77,12 +77,12 @@ export function NavProjects({
             </DropdownMenu>
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
+        {/* <SidebarMenuItem>
           <SidebarMenuButton className="text-sidebar-foreground/70">
             <DotsThreeOutlineIcon className="text-sidebar-foreground/70" />
             <span>More</span>
           </SidebarMenuButton>
-        </SidebarMenuItem>
+        </SidebarMenuItem> */}
       </SidebarMenu>
     </SidebarGroup>
   )
