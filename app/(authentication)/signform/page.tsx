@@ -12,6 +12,12 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+import { api } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
+
+// START
 export default function Authentication() {
   interface UserDataProps {
     email?: string;
@@ -20,6 +26,8 @@ export default function Authentication() {
     password2?: string;
   }
 
+  const router = useRouter();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const [isSignIn, setIsSignIn] = useState(true);
   const [userData, setUserData] = useState<UserDataProps>({
     email: "",
@@ -65,12 +73,30 @@ export default function Authentication() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    setLoading(true);
+    // setLoading(true);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password2, pen_name, ...cleanUserData } = userData;
-    console.log("Data yang siap dikirim ke API:", cleanUserData);
-    await handleFetch("/api/signin", cleanUserData);
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // const { password2, pen_name, ...cleanUserData } = userData;
+    // console.log("Data yang siap dikirim ke API:", cleanUserData);
+    // await handleFetch("/api/signin", cleanUserData);
+    try {
+      const response = await api.post("/users/signin", {
+        email: userData.email,
+        password: userData.password,
+      });
+      const { accessToken, user } = response.data;
+
+      // 1. Simpan token & user ke Zustand (Client Memory)
+      setAuth(accessToken, user);
+
+      // 2. Buat cookie tipis non-HttpOnly agar terbaca oleh Next.js Middleware (Proteksi Rute)
+      setCookie("is_logged_in", "true", { maxAge: 15 * 60 }); // Sesuai umur access token
+
+      // 3. Redirect ke halaman utama
+      router.push("/");
+    } catch (error) {
+      console.error("Login gagal:", error);
+    }
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
