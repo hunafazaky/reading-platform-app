@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { useAuthStore } from "@/store/authStore";
 
 import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
@@ -31,11 +32,14 @@ const brand = {
   plan: "Social and Entertainment",
 };
 
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+const user = useAuthStore((state) => state.user);
+
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    pen_name: user?.pen_name || "Guest",
+    email: user?.email || "u@example.com",
+    photo: user?.photo || "/dragon-book.avif",
   },
   navMain: [
     {
@@ -102,7 +106,7 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

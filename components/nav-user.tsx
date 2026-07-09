@@ -1,10 +1,6 @@
-"use client"
+"use client";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,25 +9,61 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { CaretUpDownIcon, SparkleIcon, CheckCircleIcon, CreditCardIcon, BellIcon, SignOutIcon } from "@phosphor-icons/react"
+} from "@/components/ui/sidebar";
+import {
+  CaretUpDownIcon,
+  SparkleIcon,
+  CheckCircleIcon,
+  CreditCardIcon,
+  BellIcon,
+  SignOutIcon,
+} from "@phosphor-icons/react";
+
+import { api } from "@/lib/api";
+import { useAuthStore } from "@/store/authStore";
+import { deleteCookie } from "cookies-next";
+import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
 }: {
   user: {
-    name: string
-    email: string
-    avatar: string
-  }
+    name: string;
+    email: string;
+    photo: string;
+  };
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
+  const router = useRouter();
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+
+  const handleSignOut = async () => {
+    try {
+      // 1. Panggil API backend untuk menghapus refresh_token di HTTP-Only Cookie
+      await api.delete("/users/signout");
+    } catch (error) {
+      // Kita tangkap error-nya tapi jangan hentikan proses logout di frontend
+      console.error(
+        "Backend sign out failed, clearing frontend anyway:",
+        error,
+      );
+    } finally {
+      // 2. WAJIB: Bersihkan state Zustand & localStorage (jika pakai persist)
+      clearAuth();
+
+      // 3. Hapus cookie pendukung untuk Next.js Middleware
+      deleteCookie("is_logged_in");
+
+      // 4. Redirect user ke halaman sign in
+      router.push("/signform");
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -43,7 +75,7 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user.photo} alt={user.name} />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -62,7 +94,7 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={user.photo} alt={user.name} />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
@@ -74,38 +106,33 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <SparkleIcon
-                />
+                <SparkleIcon />
                 Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <CheckCircleIcon
-                />
+                <CheckCircleIcon />
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCardIcon
-                />
+                <CreditCardIcon />
                 Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <BellIcon
-                />
+                <BellIcon />
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <SignOutIcon
-              />
+            <DropdownMenuItem onClick={handleSignOut}>
+              <SignOutIcon />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
     </SidebarMenu>
-  )
+  );
 }
