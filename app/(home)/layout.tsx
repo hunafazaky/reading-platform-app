@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/components/auth-provider";
 import { AppSidebar } from "@/components/app-sidebar";
+import { RefreshLoader } from "@/components/refresh-loader";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -46,6 +47,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+
   return (
     <>
       <html
@@ -62,12 +65,13 @@ export default function RootLayout({
       >
         <head />
         <body className="min-h-full flex flex-col">
+          <RefreshLoader />
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
-                  >
+          >
             <AuthProvider>
               <SidebarProvider>
                 <AppSidebar />
@@ -82,9 +86,7 @@ export default function RootLayout({
                       <Breadcrumb>
                         <BreadcrumbList>
                           <BreadcrumbItem className="hidden md:block">
-                            <BreadcrumbLink href="#">
-                              Home
-                            </BreadcrumbLink>
+                            <BreadcrumbLink href="#">Home</BreadcrumbLink>
                           </BreadcrumbItem>
                           <BreadcrumbSeparator className="hidden md:block" />
                           <BreadcrumbItem>
