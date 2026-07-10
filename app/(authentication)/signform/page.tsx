@@ -73,12 +73,6 @@ export default function Authentication() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // setLoading(true);
-
-    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // const { password2, pen_name, ...cleanUserData } = userData;
-    // console.log("Data yang siap dikirim ke API:", cleanUserData);
-    // await handleFetch("/api/signin", cleanUserData);
     try {
       const response = await api.post("/users/signin", {
         email: userData.email,
@@ -95,7 +89,7 @@ export default function Authentication() {
       // 3. Redirect ke halaman utama
       router.push("/");
     } catch (error) {
-      console.error("Login gagal:", error);
+      console.error("Sign In failed:", error);
     }
   };
 

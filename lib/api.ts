@@ -35,7 +35,7 @@ api.interceptors.response.use(
       try {
         // Panggil endpoint refresh backend (cookie refresh token otomatis terkirim)
         const response = await axios.post(
-          `${BASE_URL}/refresh`,
+          `${BASE_URL}/users/refresh`,
           {},
           { withCredentials: true },
         );
