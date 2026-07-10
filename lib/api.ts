@@ -1,28 +1,5 @@
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
-// export async function apiFetch(endpoint: string, options: RequestInit = {}) {
-//   const url = `${BASE_URL}${endpoint}`;
-
-//   // Berikan header default seperti Content-Type
-//   const defaultHeaders = {
-//     "Content-Type": "application/json",
-//     ...options.headers,
-//   };
-
-//   const response = await fetch(url, {
-//     ...options,
-//     headers: defaultHeaders,
-//   });
-
-//   // Jika response error, lempar ke blok catch
-//   if (!response.ok) {
-//     const errorData = await response.json().catch(() => ({}));
-//     throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-//   }
-
-//   return response.json();
-// }
-
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 import { setCookie, deleteCookie } from "cookies-next";
@@ -71,7 +48,7 @@ api.interceptors.response.use(
           .setAuth(accessToken, useAuthStore.getState().user!);
 
         // Tulis ulang flag cookie pendek untuk Next.js Middleware
-        setCookie("is_logged_in", "true", { maxAge: 15 * 60 }); // 15 menit sesuaikan access token
+        setCookie("is_signed", "true", { maxAge: 7 * 24 * 60 * 60 }); // 7D Refresh Token
 
         // Jalankan kembali request awal yang sempat gagal dengan token baru
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
@@ -79,7 +56,7 @@ api.interceptors.response.use(
       } catch (refreshError) {
         // Jika refresh token juga gagal/expired, hapus semua session dan tendang ke login
         useAuthStore.getState().clearAuth();
-        deleteCookie("is_logged_in");
+        deleteCookie("is_signed");
         window.location.href = "/signform";
         return Promise.reject(refreshError);
       }

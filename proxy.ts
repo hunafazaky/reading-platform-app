@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  const isLoggedIn = request.cookies.get("is_logged_in")?.value;
+  const isLoggedIn = request.cookies.get("is_signed")?.value;
   const { pathname } = request.nextUrl;
 
   // Skenario 1: User sudah login tapi mencoba masuk ke /signform kembali

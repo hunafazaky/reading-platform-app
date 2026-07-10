@@ -90,7 +90,7 @@ export default function Authentication() {
       setAuth(accessToken, user);
 
       // 2. Buat cookie tipis non-HttpOnly agar terbaca oleh Next.js Middleware (Proteksi Rute)
-      setCookie("is_logged_in", "true", { maxAge: 15 * 60 }); // Sesuai umur access token
+      setCookie("is_signed", "true", { maxAge: 7 * 24 * 60 * 60 }); // 7D Refresh Token
 
       // 3. Redirect ke halaman utama
       router.push("/");

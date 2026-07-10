@@ -58,7 +58,7 @@ export function NavUser({
       clearAuth();
 
       // 3. Hapus cookie pendukung untuk Next.js Middleware
-      deleteCookie("is_logged_in");
+      deleteCookie("is_signed");
 
       // 4. Redirect user ke halaman sign in
       router.push("/signform");
