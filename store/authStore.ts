@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist, createJSONStorage } from "zustand/middleware";
 
 interface User {
   id: string;
@@ -12,24 +12,26 @@ interface User {
 interface AuthState {
   user: User | null;
   accessToken: string | null;
+  isRefreshing: boolean;
   setAuth: (accessToken: string, user: User) => void;
   clearAuth: () => void;
+  setRefreshing: (status: boolean) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
       user: null,
-      accessToken: null, // Token tetap aman di memory selama aplikasi jalan
+      accessToken: null,
+      isRefreshing: false,
       setAuth: (accessToken, user) => set({ accessToken, user }),
       clearAuth: () => set({ user: null, accessToken: null }),
+      setRefreshing: (status) => set({ isRefreshing: status }),
     }),
     {
-      name: 'auth-storage', // Nama key di localStorage
+      name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
-      // PARTIALIZE: Bagian paling krusial! 
-      // Kita HANYA menyimpan info user ke localStorage, accessToken tetap di-omit (dibuang) demi keamanan
-      partialize: (state) => ({ user: state.user }), 
-    }
-  )
+      partialize: (state) => ({ user: state.user }),
+    },
+  ),
 );
