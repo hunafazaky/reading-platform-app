@@ -16,19 +16,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import { DialogSignOut } from "@/components/dialog-signout";
 import {
   CaretUpDownIcon,
   SparkleIcon,
   CheckCircleIcon,
   CreditCardIcon,
   BellIcon,
-  SignOutIcon,
 } from "@phosphor-icons/react";
-
-import { api } from "@/lib/api";
-import { useAuthStore } from "@/store/authStore";
-import { deleteCookie } from "cookies-next";
-import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -40,31 +35,6 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const router = useRouter();
-  const clearAuth = useAuthStore((state) => state.clearAuth);
-
-  const handleSignOut = async () => {
-    try {
-      // 1. Panggil API backend untuk menghapus refresh_token di HTTP-Only Cookie
-      await api.delete("/users/signout");
-    } catch (error) {
-      // Kita tangkap error-nya tapi jangan hentikan proses logout di frontend
-      console.error(
-        "Backend sign out failed, clearing frontend anyway:",
-        error,
-      );
-    } finally {
-      // 2. WAJIB: Bersihkan state Zustand & localStorage (jika pakai persist)
-      clearAuth();
-
-      // 3. Hapus cookie pendukung untuk Next.js Middleware
-      deleteCookie("is_signed");
-
-      // 4. Redirect user ke halaman sign in
-      router.push("/signform");
-    }
-  };
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -126,10 +96,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut}>
-              <SignOutIcon />
-              Log out
-            </DropdownMenuItem>
+            <DialogSignOut />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
