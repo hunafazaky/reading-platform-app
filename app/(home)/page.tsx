@@ -61,8 +61,8 @@ export default function Home() {
         className="hidden md:block w-200"
         alt="Dragon love reading"
         loading="eager"
-      />
-      <Image
+        />
+        <Image
         src="/dragon-book.avif"
         width={560}
         height={620}
