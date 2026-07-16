@@ -1,11 +1,11 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+// const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 import axios from "axios";
 import { useAuthStore } from "@/store/authStore";
 import { setCookie, deleteCookie } from "cookies-next";
 
 export const api = axios.create({
-  baseURL: BASE_URL,
+  baseURL: '/api',
   withCredentials: true,
 });
 
@@ -34,7 +34,7 @@ api.interceptors.response.use(
       try {
         // Panggil endpoint refresh backend (cookie refresh token otomatis terkirim)
         const response = await axios.post(
-          `${BASE_URL}/users/refresh`,
+          `/api/users/refresh`,
           {},
           { withCredentials: true },
         );
