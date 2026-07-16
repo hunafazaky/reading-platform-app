@@ -19,6 +19,7 @@ import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
 
 // START
 export default function Authentication() {
@@ -51,9 +52,9 @@ export default function Authentication() {
         }));
     };
 
-    const handleErrorMessage = (status) => {
+    const handleErrorMessage = (error: AxiosError) => {
         let message;
-        switch (status) {
+        switch (error.status) {
             case 401:
                 message = "Email or Password incorrect.";
                 break;
@@ -84,7 +85,7 @@ export default function Authentication() {
             router.push("/");
         } catch (error) {
             // console.error("Sign In failed:", error);
-            handleErrorMessage(error.status);
+            handleErrorMessage(error as AxiosError);
         } finally {
             setLoading(false);
         }
@@ -113,7 +114,7 @@ export default function Authentication() {
             router.push("/");
         } catch (error) {
             // console.error("Sign Up failed:", error);
-            handleErrorMessage(error.status);
+            handleErrorMessage(error as AxiosError);
         } finally {
             setLoading(false);
         }

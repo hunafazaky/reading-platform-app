@@ -1,11 +1,11 @@
 import {
     Pagination,
     PaginationContent,
-    PaginationEllipsis,
+    // PaginationEllipsis,
     PaginationItem,
     PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
+    // PaginationNext,
+    // PaginationPrevious,
 } from "@/components/ui/pagination";
 
 import { Card } from "@/components/ui/card";
