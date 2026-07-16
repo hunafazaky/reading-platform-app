@@ -12,6 +12,7 @@ import { CardWork } from "@/components/card-work";
 import { CardWorkSkeleton } from "@/components/card-work-skeleton";
 // import { Divide } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import { AppPagination } from "@/components/app-pagination";
 
 const queryClient = new QueryClient();
 function Work() {
@@ -61,6 +62,7 @@ function Work() {
                     </li>
                 ))}
             </ul>
+            <AppPagination page={data.page} totalPages={data.totalPages} />
         </section>
     );
 }
