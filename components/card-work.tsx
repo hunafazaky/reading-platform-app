@@ -28,7 +28,7 @@ export function CardWork({ work }: { work: Work }) {
     // console.log(work.id);
     return (
         <Card>
-            <CardHeader>
+            <CardHeader>                                                                                                  
                 <CardTitle>{work.title}</CardTitle>
                 {work.categories.length > 0 ? (
                     work.categories.map((category: string, index: number) => (

@@ -9,6 +9,9 @@ import {
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { api } from "@/lib/api";
 import { CardWork } from "@/components/card-work";
+import { CardWorkSkeleton } from "@/components/card-work-skeleton";
+// import { Divide } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 
 const queryClient = new QueryClient();
 function Work() {
@@ -21,7 +24,18 @@ function Work() {
         },
     });
 
-    if (isPending) return "Loading...";
+    if (isPending)
+        return (
+            <section>
+                <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
+                    {Array.from({ length: 12 }).map((_, index) => (
+                        <li key={index}>
+                            <CardWorkSkeleton />
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        );
 
     if (error) return "An error has occurred: " + error.message;
 
@@ -33,8 +47,13 @@ function Work() {
     }
 
     return (
-        <div>
-            <div>{isFetching ? "Updating..." : ""}</div>
+        <section>
+            {isFetching && (
+                <div className="absolute top-0 right-0 m-4 flex items-center gap-2 font-bold opacity-60">
+                    <Spinner />
+                    <span>Fetching...</span>
+                </div>
+            )}
             <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
                 {data.works.map((work: Work) => (
                     <li key={work.id}>
@@ -42,8 +61,7 @@ function Work() {
                     </li>
                 ))}
             </ul>
-            <p>{data.page}</p>
-        </div>
+        </section>
     );
 }
 
@@ -51,25 +69,8 @@ export default function Home() {
     return (
         <div>
             <QueryClientProvider client={queryClient}>
-                {/* <ReactQueryDevtools /> */}
                 <Work />
             </QueryClientProvider>
-            {/* <Image
-        src="/dragon-book.avif"
-        width={1000}
-        height={760}
-        className="hidden md:block w-200"
-        alt="Dragon love reading"
-        loading="eager"
-        />
-        <Image
-        src="/dragon-book.avif"
-        width={560}
-        height={620}
-        className="block md:hidden w-200"
-        alt="Dragon love reading"
-        loading="eager"
-      /> */}
         </div>
     );
 }
