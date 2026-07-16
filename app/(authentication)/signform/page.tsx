@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
@@ -48,32 +49,9 @@ export default function Authentication() {
         }));
     };
 
-    const handleFetch = async (route: string, userData: object) => {
-        try {
-            const res = await fetch(route, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    ...userData,
-                }),
-            });
-
-            const result = await res.json();
-            if (!res.ok) throw new Error(result.message);
-            console.log(`result data:`, result);
-        } catch (error: unknown) {
-            const message =
-                error instanceof Error
-                    ? error.message
-                    : "Unknown Error Occured.";
-            console.log(`Connection Failed: ${message}`);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
 
         try {
             const response = await api.post("/users/signin", {
@@ -82,21 +60,20 @@ export default function Authentication() {
             });
             const { accessToken, user } = response.data;
 
-            // 1. Simpan token & user ke Zustand (Client Memory)
             setAuth(accessToken, user);
-
-            // 2. Buat cookie tipis non-HttpOnly agar terbaca oleh Next.js Middleware (Proteksi Rute)
             setCookie("is_signed", "true", { maxAge: 7 * 24 * 60 * 60 }); // 7D Refresh Token
 
-            // 3. Redirect ke halaman utama
             router.push("/");
         } catch (error) {
             console.error("Sign In failed:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true);
 
         if (userData.password !== userData.password2) {
             setStatus("Password and Retype Password are different.");
@@ -111,21 +88,24 @@ export default function Authentication() {
             });
             const { accessToken, user } = response.data;
 
-            // 1. Simpan token & user ke Zustand (Client Memory)
             setAuth(accessToken, user);
-
-            // 2. Buat cookie tipis non-HttpOnly agar terbaca oleh Next.js Middleware (Proteksi Rute)
             setCookie("is_signed", "true", { maxAge: 7 * 24 * 60 * 60 }); // 7D Refresh Token
 
-            // 3. Redirect ke halaman utama
             router.push("/");
         } catch (error) {
             console.error("Sign Up failed:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div className="flex flex-col justify-center items-center min-h-dvh">
+            {loading && (
+                <div className="absolute bg-mist-900/60 w-full h-full flex justify-center items-center z-10">
+                    <Spinner className="size-8" />
+                </div>
+            )}
             <h1 className="text-2xl font-bold my-4">Reading Platform</h1>
             <Card className="w-full max-w-sm">
                 <CardHeader>
