@@ -1,26 +1,25 @@
 "use client";
 
-// import Image from "next/image";
-import {
-    QueryClient,
-    QueryClientProvider,
-    useQuery,
-} from "@tanstack/react-query";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { CardWork } from "@/components/card-work";
 import { CardWorkSkeleton } from "@/components/card-work-skeleton";
-// import { Divide } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
 import { AppPagination } from "@/components/app-pagination";
 
-const queryClient = new QueryClient();
-function Work() {
+interface Work {
+    id: string;
+    title: string;
+    body: string;
+    categories: string[];
+}
+
+// Langsung jadikan ini sebagai export default
+export default function Home() {
     const { isPending, error, data, isFetching } = useQuery({
-        queryKey: ["repoData"],
+        queryKey: ["works"],
         queryFn: async () => {
             const response = await api.get("/works");
-            // console.log(response.data)
             return response.data;
         },
     });
@@ -38,17 +37,10 @@ function Work() {
             </section>
         );
 
-    if (error) return "An error has occurred: " + error.message;
-
-    interface Work {
-        id: string;
-        title: string;
-        body: string;
-        categories: string[];
-    }
+    if (error) return <section>An error has occurred: {error.message}</section>;
 
     return (
-        <section>
+        <section className="relative">
             {isFetching && (
                 <div className="absolute top-0 right-0 m-4 flex items-center gap-2 font-bold opacity-60">
                     <Spinner />
@@ -64,15 +56,5 @@ function Work() {
             </ul>
             <AppPagination page={data.page} totalPages={data.totalPages} />
         </section>
-    );
-}
-
-export default function Home() {
-    return (
-        <div>
-            <QueryClientProvider client={queryClient}>
-                <Work />
-            </QueryClientProvider>
-        </div>
     );
 }
