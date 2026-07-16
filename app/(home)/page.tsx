@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { CardWork } from "@/components/card-work";
 import { CardWorkSkeleton } from "@/components/card-work-skeleton";
-import { Spinner } from "@/components/ui/spinner";
+import { SpinnerFetch } from "@/components/spinner-fetch";
 import { AppPagination } from "@/components/app-pagination";
 
 interface Work {
@@ -41,12 +41,7 @@ export default function Home() {
 
     return (
         <section className="relative">
-            {isFetching && (
-                <div className="absolute top-0 right-0 m-4 flex items-center gap-2 font-bold opacity-60">
-                    <Spinner />
-                    <span>Fetching...</span>
-                </div>
-            )}
+            {isFetching && <SpinnerFetch/>}
             <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-2">
                 {data.works.map((work: Work) => (
                     <li key={work.id}>
