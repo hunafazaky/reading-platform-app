@@ -1,3 +1,4 @@
+"use client";
 import {
     Card,
     CardAction,
@@ -12,6 +13,7 @@ import {
     ButtonGroup,
     ButtonGroupSeparator,
 } from "@/components/ui/button-group";
+import { useRouter } from "next/navigation";
 
 // Icon
 import { PenNibIcon, ArticleIcon, TrashIcon } from "@phosphor-icons/react";
@@ -25,9 +27,20 @@ interface Work {
 
 export function CardWork({ work }: { work: Work }) {
     // console.log(work.id);
+    //
+    const router = useRouter();
+    const handleNavigate = (title: string, id: string) => {
+        const cleanedTitle = title
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, "")
+            .trim()
+            .replace(/\s+/g, "-");
+        router.push(`/works/${cleanedTitle}-${id}`);
+    };
+
     return (
         <Card>
-            <CardHeader>                                                                                                  
+            <CardHeader>
                 <CardTitle>{work.title}</CardTitle>
                 {work.categories.length > 0 ? (
                     work.categories.map((category: string, index: number) => (
@@ -44,8 +57,12 @@ export function CardWork({ work }: { work: Work }) {
                 <p className="line-clamp-3">{work.body}</p>
             </CardContent>
             <CardFooter>
-                {/*<p>Card Footer</p>*/}
-                <Button size="sm" variant="ghost" className="text-lime-600">
+                <Button
+                    size="sm"
+                    variant="ghost"
+                    className="text-lime-600"
+                    onClick={() => handleNavigate(work.title, work.id)}
+                >
                     <ArticleIcon />
                     Read
                 </Button>
