@@ -12,6 +12,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
@@ -49,6 +51,22 @@ export default function Authentication() {
         }));
     };
 
+    const handleErrorMessage = (status) => {
+        let message;
+        switch (status) {
+            case 401:
+                message = "Email or Password incorrect.";
+                break;
+            case 429:
+                message = "Too many requests. Please try again later.";
+                break;
+            default:
+                message =
+                    "An unexpected error occurred. Please try again later.";
+        }
+        toast.error(message);
+    };
+
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -65,7 +83,8 @@ export default function Authentication() {
 
             router.push("/");
         } catch (error) {
-            console.error("Sign In failed:", error);
+            // console.error("Sign In failed:", error);
+            handleErrorMessage(error.status);
         } finally {
             setLoading(false);
         }
@@ -93,7 +112,8 @@ export default function Authentication() {
 
             router.push("/");
         } catch (error) {
-            console.error("Sign Up failed:", error);
+            // console.error("Sign Up failed:", error);
+            handleErrorMessage(error.status);
         } finally {
             setLoading(false);
         }
@@ -106,6 +126,7 @@ export default function Authentication() {
                     <Spinner className="size-8" />
                 </div>
             )}
+            <Toaster position="top-center" richColors />
             <h1 className="text-2xl font-bold my-4">Reading Platform</h1>
             <Card className="w-full max-w-sm">
                 <CardHeader>
