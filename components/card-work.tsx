@@ -14,6 +14,7 @@ import {
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/authStore";
 
 // Icon
 import { PenNibIcon, ArticleIcon, TrashIcon } from "@phosphor-icons/react";
@@ -23,11 +24,18 @@ interface Work {
   title: string;
   body: string;
   categories: string[];
+  writer: {
+    _id: string;
+  };
 }
 
 export function CardWork({ work }: { work: Work }) {
   // console.log(work.id);
   //
+
+  const user = useAuthStore((state) => state.user) || {
+    id: null,
+  };
   const router = useRouter();
   const handleNavigate = (title: string, id: string) => {
     const cleanedTitle = title
@@ -74,17 +82,19 @@ export function CardWork({ work }: { work: Work }) {
           <ArticleIcon />
           Read
         </Button>
-        <ButtonGroup aria-label="Button group" className="ml-auto">
-          <Button size="sm" variant="ghost" className="text-amber-400">
-            <PenNibIcon />
-            Edit
-          </Button>
-          <ButtonGroupSeparator />
-          <Button size="sm" variant="ghost" className="text-amber-600">
-            <TrashIcon />
-            Delete
-          </Button>
-        </ButtonGroup>
+        {user.id === work.writer._id && (
+          <ButtonGroup aria-label="Button group" className="ml-auto">
+            <Button size="sm" variant="ghost" className="text-amber-400">
+              <PenNibIcon />
+              Edit
+            </Button>
+            <ButtonGroupSeparator />
+            <Button size="sm" variant="ghost" className="text-amber-600">
+              <TrashIcon />
+              Delete
+            </Button>
+          </ButtonGroup>
+        )}
       </CardFooter>
     </Card>
   );

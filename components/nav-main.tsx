@@ -35,7 +35,7 @@ export function NavMain({
   return (
     <TooltipProvider>
       <SidebarGroup>
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+        <SidebarGroupLabel>Content</SidebarGroupLabel>
         <SidebarMenu>
           {items.map((item) => (
             <Collapsible

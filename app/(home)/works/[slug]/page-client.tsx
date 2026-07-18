@@ -54,11 +54,18 @@ export default function PageClient({ id }: { id: string }) {
         <p>{data.body}</p>
         {data.categories.length > 0 ? (
           data.categories.map((category: string, index: number) => (
-            <span key={index}>{category}</span>
+            // <span key={index}>{category}</span>
+            <Button
+              key={index}
+              variant="link"
+              className="text-sm px-0 opacity-70 mr-2"
+            >
+              #{category}
+            </Button>
           ))
         ) : (
-          <Button variant="link" className="text-sm px-0 opacity-70">
-            #Uncategorized
+          <Button variant="link" className="text-sm px-0 opacity-70 mr-2 disabled">
+            #uncategorized
           </Button>
         )}
       </div>
