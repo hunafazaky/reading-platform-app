@@ -85,7 +85,7 @@ const data = {
   projects: [
     {
       name: "Create New Story",
-      url: "#",
+      url: "/works/write",
       icon: <PlusIcon  />,
     },
     {
