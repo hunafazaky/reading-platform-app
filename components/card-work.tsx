@@ -41,7 +41,7 @@ export function CardWork({ work }: { work: Work }) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{work.title}</CardTitle>
+                <CardTitle className="truncate">{work.title}</CardTitle>
                 {work.categories.length > 0 ? (
                     work.categories.map((category: string, index: number) => (
                         <CardDescription key={index}>
