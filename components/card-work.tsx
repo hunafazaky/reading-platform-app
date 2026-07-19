@@ -13,8 +13,9 @@ import {
   ButtonGroup,
   ButtonGroupSeparator,
 } from "@/components/ui/button-group";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
+import Link from "next/link";
 
 // Icon
 import { PenNibIcon, ArticleIcon, TrashIcon } from "@phosphor-icons/react";
@@ -30,20 +31,17 @@ interface Work {
 }
 
 export function CardWork({ work }: { work: Work }) {
-  // console.log(work.id);
-  //
-
   const user = useAuthStore((state) => state.user) || {
     id: null,
   };
-  const router = useRouter();
-  const handleNavigate = (point: string, title: string, id: string) => {
+  // const router = useRouter();
+  const getWorkUrl = (point: string, title: string, id: string) => {
     const cleanedTitle = title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, "")
       .trim()
       .replace(/\s+/g, "-");
-    router.push(`/${cleanedTitle}-${id}/${point}`);
+    return `/${cleanedTitle}-${id}/${point}`;
   };
 
   return (
@@ -73,25 +71,24 @@ export function CardWork({ work }: { work: Work }) {
         <p className="line-clamp-3">{work.body}</p>
       </CardContent>
       <CardFooter>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="text-lime-600"
-          onClick={() => handleNavigate("show", work.title, work.id)}
-        >
-          <ArticleIcon />
-          Read
+        <Button asChild size="sm" variant="ghost" className="text-lime-600">
+          <Link href={getWorkUrl("show", work.title, work.id)}>
+            <ArticleIcon />
+            Read
+          </Link>
         </Button>
         {user.id === work.writer._id && (
           <ButtonGroup aria-label="Button group" className="ml-auto">
             <Button
+              asChild
               size="sm"
               variant="ghost"
               className="text-amber-400"
-              onClick={() => handleNavigate("edit", work.title, work.id)}
             >
-              <PenNibIcon />
-              Edit
+              <Link href={getWorkUrl("edit", work.title, work.id)}>
+                <PenNibIcon />
+                Edit
+              </Link>
             </Button>
             <ButtonGroupSeparator />
             <Button size="sm" variant="ghost" className="text-amber-600">

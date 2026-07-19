@@ -21,6 +21,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -86,7 +87,9 @@ export default function RootLayout({
                         <Breadcrumb>
                           <BreadcrumbList>
                             <BreadcrumbItem className="hidden md:block">
-                              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                              <BreadcrumbLink asChild>
+                                <Link href="/">Home</Link>
+                              </BreadcrumbLink>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator className="hidden md:block" />
                             <BreadcrumbItem>

@@ -1,5 +1,8 @@
 "use client";
+
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query"; // Masukkan TanStack Query
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -8,29 +11,48 @@ import SelectCategories from "@/components/select-categories";
 import { Spinner } from "@/components/ui/spinner";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-
 import { api } from "@/lib/api";
-import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 
-// START
-export default function Authentication() {
-  interface WorkDataProps {
-    title?: string;
-    body?: string;
-  }
+interface WorkDataProps {
+  title: string;
+  body: string;
+}
 
+// PERBAIKAN 1: Mengubah nama fungsi dari 'Authentication' menjadi 'WritePage'
+export default function WritePage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const [workData, setWorkData] = useState<WorkDataProps>({
     title: "",
     body: "",
   });
-
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+
+  // PERBAIKAN 2: Menggunakan useMutation untuk menggantikan try/catch & loading manual
+  const mutation = useMutation({
+    mutationFn: async (newWork: { title: string; body: string; categories: string[] }) => {
+      const response = await api.post("/works", newWork);
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("New Work Created successfully!");
+
+      // PERBAIKAN 3: Invalidate cache 'works' agar karya baru langsung muncul di Home tanpa refresh
+      queryClient.invalidateQueries({ queryKey: ["works"] });
+
+      // Tendang user kembali ke halaman utama
+      router.push("/");
+    },
+    onError: (error: AxiosError) => {
+      console.log(error);
+      toast.error("Failed to create work. Please try again.");
+    },
+  });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setWorkData((prevData) => ({
@@ -39,47 +61,21 @@ export default function Authentication() {
     }));
   };
 
-  const handleErrorMessage = (error: AxiosError) => {
-    // let message;
-    // switch (error.status) {
-    //     case 401:
-    //         message = "Email or Password incorrect.";
-    //         break;
-    //     case 429:
-    //         message = "Too many requests. Please try again later.";
-    //         break;
-    //     default:
-    //         message =
-    //             "An unexpected error occurred. Please try again later.";
-    // }
-    // toast.error(error.stringify());
-    console.log(error);
-  };
-
-  const handlePost = async (e: React.FormEvent) => {
+  const handlePost = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    try {
-      const response = await api.post("/works", {
-        title: workData.title,
-        body: workData.body,
-        categories: selectedCategories,
-      });
-      const work = response.data;
-      console.log(work);
-      toast.success("New Work Created.");
-      router.push("/");
-    } catch (error) {
-      handleErrorMessage(error as AxiosError);
-    } finally {
-      setLoading(false);
-    }
+    
+    // Memicu mutasi data ke server
+    mutation.mutate({
+      title: workData.title,
+      body: workData.body,
+      categories: selectedCategories,
+    });
   };
 
   return (
-    <div className="min-h-3/4">
-      {loading && (
+    <div className="min-h-3/4 relative">
+      {/* Menggunakan mutation.isPending bawaan TanStack */}
+      {mutation.isPending && (
         <div className="absolute bg-mist-900/60 w-full h-full flex justify-center items-center z-10">
           <Spinner className="size-8" />
         </div>
@@ -100,6 +96,7 @@ export default function Authentication() {
               onChange={handleChange}
               placeholder="Make sure the title is unique."
               required
+              disabled={mutation.isPending} // Proteksi input saat loading
             />
           </Field>
           <Field>
@@ -110,7 +107,8 @@ export default function Authentication() {
               value={workData.body}
               onChange={handleChange}
               placeholder="Type your writings here."
-              className="h-50 "
+              className="h-50"
+              disabled={mutation.isPending} // Proteksi textarea saat loading
             />
           </Field>
           <Field className="flex flex-col gap-1">
@@ -120,15 +118,19 @@ export default function Authentication() {
             <SelectCategories
               value={selectedCategories}
               onChange={setSelectedCategories}
+              // Jika SelectCategories mendukung prop disabled, tambahkan: disabled={mutation.isPending}
             />
           </Field>
 
-          {/* Temp debug untuk melihat isi state array of string kamu */}
+          {/* Temp debug */}
           <p className="text-xs text-gray-400">
             State selectedCategories: {JSON.stringify(selectedCategories)}
           </p>
+          
           <Field orientation="horizontal">
-            <Button type="submit">Post</Button>
+            <Button type="submit" disabled={mutation.isPending}>
+              {mutation.isPending ? "Posting..." : "Post Work"}
+            </Button>
           </Field>
         </FieldGroup>
       </form>
