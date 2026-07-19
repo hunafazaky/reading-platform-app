@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +18,6 @@ import { Toaster } from "@/components/ui/sonner";
 
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
-import { setCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
 
@@ -39,7 +39,6 @@ export default function Authentication() {
     password: "",
     password2: "",
   });
-  // const [isSignIn, setIsSignIn] = useState(true);
 
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState("");
@@ -77,13 +76,10 @@ export default function Authentication() {
         password: userData.password,
       });
       const { accessToken, user } = response.data;
-
       setAuth(accessToken, user);
-      setCookie("is_signed", "true", { maxAge: 7 * 24 * 60 * 60 }); // 7D Refresh Token
 
       router.push("/");
     } catch (error) {
-      // console.error("Sign In failed:", error);
       handleErrorMessage(error as AxiosError);
     } finally {
       setLoading(false);
@@ -108,7 +104,6 @@ export default function Authentication() {
       const { accessToken, user } = response.data;
 
       setAuth(accessToken, user);
-      setCookie("is_signed", "true", { maxAge: 7 * 24 * 60 * 60 }); // 7D Refresh Token
 
       router.push("/");
     } catch (error) {

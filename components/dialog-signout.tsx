@@ -15,12 +15,12 @@ import { SignOutIcon } from "@phosphor-icons/react";
 
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/authStore";
-import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/navigation";
 
 export function DialogSignOut() {
   const router = useRouter();
   const clearAuth = useAuthStore((state) => state.clearAuth);
+
   const handleSignOut = async () => {
     try {
       await api.delete("/users/signout");
@@ -31,7 +31,6 @@ export function DialogSignOut() {
       );
     } finally {
       clearAuth();
-      deleteCookie("is_signed");
       router.push("/signform");
     }
   };

@@ -1,28 +1,28 @@
+// proxy.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+// GANTI NAMA FUNGSI INI MENJADI 'proxy'
 export function proxy(request: NextRequest) {
-  const isLoggedIn = request.cookies.get("is_signed")?.value;
+  const token = request.cookies.get("refreshToken")?.value;
   const { pathname } = request.nextUrl;
 
-  // Skenario 1: User sudah login tapi mencoba masuk ke /signform kembali
-  if (isLoggedIn && pathname.startsWith("/signform")) {
-    return NextResponse.redirect(new URL("/", request.url));
+  const isAuthRoute = pathname === "/signform";
+
+  if (!token && !isAuthRoute) {
+    return NextResponse.redirect(new URL("/signform", request.url));
   }
 
-  // Skenario 2: User belum login / token habis, tapi nekat masuk halaman terproteksi (seperti root atau dashboard)
-  if (!isLoggedIn && !pathname.startsWith("/signform")) {
-    return NextResponse.redirect(new URL("/signform", request.url));
+  if (token && isAuthRoute) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
 }
 
-// Konfigurasi rute mana saja yang diproteksi
+// Konfigurasi matcher tetap sama
 export const config = {
   matcher: [
-    "/", // Root page
-    // "/dashboard/:path*", // Contoh halaman terproteksi lainnya
-    "/signform", // Halaman sign in itu sendiri
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
