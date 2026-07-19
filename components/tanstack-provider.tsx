@@ -14,12 +14,10 @@ export function TanstackProvider({ children }: { children: React.ReactNode }) {
             refetchOnWindowFocus: false, // Menghindari refetch otomatis saat pindah tab (opsional)
           },
         },
-      })
+      }),
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }

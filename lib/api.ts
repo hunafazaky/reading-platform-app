@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/authStore";
 import { setCookie, deleteCookie } from "cookies-next";
 
 export const api = axios.create({
-  baseURL: '/api',
+  baseURL: "/api",
   withCredentials: true,
 });
 

@@ -13,8 +13,8 @@
 
 ## Fitur Utama
 
-- **Rich-Text Editor untuk Tulisan Panjang:** Pembuatan artikel atau cerpen dengan dukungan pemformatan teks lengkap (*bold, italic, headings*) serta penyimpanan draf otomatis.
-- **Interaksi Sosial Dinamis:** Fitur mengikuti (*follow*) kreator lain, menyukai (*like*), menyimpan konten (*bookmark*), dan sistem komentar bersarang (*nested comments*).
+- **Rich-Text Editor untuk Tulisan Panjang:** Pembuatan artikel atau cerpen dengan dukungan pemformatan teks lengkap (_bold, italic, headings_) serta penyimpanan draf otomatis.
+- **Interaksi Sosial Dinamis:** Fitur mengikuti (_follow_) kreator lain, menyukai (_like_), menyimpan konten (_bookmark_), dan sistem komentar bersarang (_nested comments_).
 - **Pencarian & Filter Instan:** Memudahkan pengguna menemukan tulisan atau blog berdasarkan tag, kategori terpopuler, maupun nama penulis.
 - **Desain Responsif & Mode Gelap:** Antarmuka modern yang ramah diakses melalui ponsel pintar, tablet, maupun desktop menggunakan Tailwind CSS.
 - **Server-Side Rendering (SSR) & SEO Optimized:** Pengisian konten tulisan yang di-render di sisi server untuk pemuatan halaman super cepat dan ramah mesin pencari.
@@ -39,25 +39,30 @@ Aplikasi ini mengadopsi ekosistem teknologi modern berikut:
 Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di komputer lokal Anda:
 
 ### Prasyarat
+
 Pastikan Anda sudah menginstal perangkat lunak berikut:
+
 - **Node.js** (Versi v18.x atau yang terbaru)
 - **pnpm**
 
 ### Langkah Instalasi
 
 1. **Klon Repositori:**
+
    ```bash
    git clone [https://github.com/hunafazaky/pamacha-app](https://github.com/hunafazaky/pamacha-app)
    cd pamacha-app
    ```
 
 2. **Instal Dependensi:**
+
    ```bash
    pnpm install
    ```
 
 3. **Konfigurasi Environment Variables:**
-   Buat berkas `.env.local` di direktori utama (*root*) proyek Anda, kemudian lengkapi variabel berikut sesuai dengan konfigurasi API Anda:
+   Buat berkas `.env.local` di direktori utama (_root_) proyek Anda, kemudian lengkapi variabel berikut sesuai dengan konfigurasi API Anda:
+
    ```env
    NEXT_PUBLIC_API_BASE_URL=[https://api.domainanda.com/v1](https://api.domainanda.com/v1)
    NEXTAUTH_SECRET=rahasia_jwt_anda_disini
@@ -97,7 +102,7 @@ Struktur folder proyek ini menggunakan standar Next.js App Router yang bersih da
 
 ## 🤝 Kontribusi
 
-Kontribusi dari pengembang lain sangat dihargai! Jika Anda ingin memperbaiki *bug* atau menambahkan fitur baru:
+Kontribusi dari pengembang lain sangat dihargai! Jika Anda ingin memperbaiki _bug_ atau menambahkan fitur baru:
 
 1. Lakukan **Fork** pada proyek ini.
 2. Buat branch fitur baru (`git checkout -b fitur/FiturKeren`).

@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarInput,
-} from "@/components/ui/sidebar"
-import { MagnifyingGlassIcon } from "@phosphor-icons/react"
+} from "@/components/ui/sidebar";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react";
 
 export function SearchForm({ ...props }: React.ComponentProps<"form">) {
   return (
@@ -25,5 +25,5 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
         </SidebarGroupContent>
       </SidebarGroup>
     </form>
-  )
+  );
 }
