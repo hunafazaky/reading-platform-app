@@ -72,7 +72,7 @@ export function CardWork({ work }: { work: Work }) {
       </CardContent>
       <CardFooter>
         <Button asChild size="sm" variant="ghost" className="text-lime-600">
-          <Link href={getWorkUrl("show", work.title, work.id)}>
+          <Link href={getWorkUrl("read", work.title, work.id)}>
             <ArticleIcon />
             Read
           </Link>
