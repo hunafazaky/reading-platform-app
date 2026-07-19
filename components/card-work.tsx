@@ -18,7 +18,9 @@ import { useAuthStore } from "@/store/authStore";
 import Link from "next/link";
 
 // Icon
-import { PenNibIcon, ArticleIcon, TrashIcon } from "@phosphor-icons/react";
+import { PenNibIcon, ArticleIcon } from "@phosphor-icons/react";
+
+import { DialogDeleteWork } from "@/components/dialog-deletework";
 
 interface Work {
   id: string;
@@ -91,10 +93,11 @@ export function CardWork({ work }: { work: Work }) {
               </Link>
             </Button>
             <ButtonGroupSeparator />
-            <Button size="sm" variant="ghost" className="text-amber-600">
+            <DialogDeleteWork id={work.id} />
+            {/* <Button size="sm" variant="ghost" className="text-amber-600">
               <TrashIcon />
               Delete
-            </Button>
+            </Button> */}
           </ButtonGroup>
         )}
       </CardFooter>
