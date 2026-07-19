@@ -22,7 +22,7 @@ import {
   StackPlusIcon,
   SmileyMeltingIcon,
   UsersIcon,
-  QuotesIcon  ,
+  QuotesIcon,
 } from "@phosphor-icons/react";
 
 // This is sample data.
@@ -33,79 +33,78 @@ const brand = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-const user = useAuthStore((state) => state.user);
+  const user = useAuthStore((state) => state.user);
 
-const data = {
-  user: {
-    pen_name: user?.pen_name || "Guest",
-    email: user?.email || "u@example.com",
-    photo: user?.photo || "/dragon-book.avif",
-  },
-  navMain: [
-    {
-      title: "Discovery",
-      url: "#",
-      icon: <QuotesIcon   />,
-      isActive: true,
-      items: [
-        {
-          title: "Followed",
-          url: "#",
-        },
-        {
-          title: "Timeline",
-          url: "#",
-        },
-        {
-          title: "Book of Fame",
-          url: "#",
-        },
-      ],
+  const data = {
+    user: {
+      pen_name: user?.pen_name || "Guest",
+      email: user?.email || "u@example.com",
+      photo: user?.photo || "/dragon-book.avif",
     },
-    {
-      title: "Activity",
-      url: "#",
-      icon: <CalendarDotsIcon />,
-      items: [
-                {
-          title: "Finished",
-          url: "#",
-        },
-        {
-          title: "Ongoing",
-          url: "#",
-        },
-        {
-          title: "Rated Fiction",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Create New Story",
-      url: "/works/write",
-      icon: <PlusIcon  />,
-    },
-    {
-      name: "Create New Series",
-      url: "#",
-      icon: <StackPlusIcon  />,
-    },
-    {
-      name: "Following",
-      url: "#",
-      icon: <SmileyMeltingIcon />,
-    },
-    {
-      name: "Followers",
-      url: "#",
-      icon: <UsersIcon />,
-    },
-  ],
-};
-
+    navMain: [
+      {
+        title: "Discovery",
+        url: "#",
+        icon: <QuotesIcon />,
+        isActive: true,
+        items: [
+          {
+            title: "Followed",
+            url: "#",
+          },
+          {
+            title: "Timeline",
+            url: "#",
+          },
+          {
+            title: "Book of Fame",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Activity",
+        url: "#",
+        icon: <CalendarDotsIcon />,
+        items: [
+          {
+            title: "Finished",
+            url: "#",
+          },
+          {
+            title: "Ongoing",
+            url: "#",
+          },
+          {
+            title: "Rated Fiction",
+            url: "#",
+          },
+        ],
+      },
+    ],
+    projects: [
+      {
+        name: "Create New Story",
+        url: "/write",
+        icon: <PlusIcon />,
+      },
+      {
+        name: "Create New Series",
+        url: "#",
+        icon: <StackPlusIcon />,
+      },
+      {
+        name: "Following",
+        url: "#",
+        icon: <SmileyMeltingIcon />,
+      },
+      {
+        name: "Followers",
+        url: "#",
+        icon: <UsersIcon />,
+      },
+    ],
+  };
 
   return (
     <Sidebar collapsible="icon" {...props}>

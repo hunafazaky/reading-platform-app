@@ -37,13 +37,13 @@ export function CardWork({ work }: { work: Work }) {
     id: null,
   };
   const router = useRouter();
-  const handleNavigate = (title: string, id: string) => {
+  const handleNavigate = (point: string, title: string, id: string) => {
     const cleanedTitle = title
       .toLowerCase()
       .replace(/[^a-z0-9\s-]/g, "")
       .trim()
       .replace(/\s+/g, "-");
-    router.push(`/works/${cleanedTitle}-${id}`);
+    router.push(`/${cleanedTitle}-${id}/${point}`);
   };
 
   return (
@@ -77,14 +77,19 @@ export function CardWork({ work }: { work: Work }) {
           size="sm"
           variant="ghost"
           className="text-lime-600"
-          onClick={() => handleNavigate(work.title, work.id)}
+          onClick={() => handleNavigate("show", work.title, work.id)}
         >
           <ArticleIcon />
           Read
         </Button>
         {user.id === work.writer._id && (
           <ButtonGroup aria-label="Button group" className="ml-auto">
-            <Button size="sm" variant="ghost" className="text-amber-400">
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-amber-400"
+              onClick={() => handleNavigate("edit", work.title, work.id)}
+            >
               <PenNibIcon />
               Edit
             </Button>
