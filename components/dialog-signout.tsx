@@ -39,6 +39,7 @@ export function DialogSignOut() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <DropdownMenuItem
+          variant="destructive"
           onSelect={(e) => {
             e.preventDefault();
           }}

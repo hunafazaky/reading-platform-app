@@ -4,11 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  // DropdownMenuGroup,
+  // DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import {
   SidebarMenu,
@@ -19,10 +19,11 @@ import {
 import { DialogSignOut } from "@/components/dialog-signout";
 import {
   CaretUpDownIcon,
-  SparkleIcon,
-  CheckCircleIcon,
-  CreditCardIcon,
-  BellIcon,
+  UserGearIcon  
+  // SparkleIcon,
+  // CheckCircleIcon,
+  // CreditCardIcon,
+  // BellIcon,
 } from "@phosphor-icons/react";
 
 export function NavUser({
@@ -61,20 +62,12 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.photo} alt={user.pen_name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.pen_name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
+            <DropdownMenuItem>
+                <UserGearIcon   />
+                User Settings
+              </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
+            {/* <DropdownMenuGroup>
               <DropdownMenuItem>
                 <SparkleIcon />
                 Upgrade to Pro
@@ -95,7 +88,7 @@ export function NavUser({
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+            <DropdownMenuSeparator /> */}
             <DialogSignOut />
           </DropdownMenuContent>
         </DropdownMenu>
