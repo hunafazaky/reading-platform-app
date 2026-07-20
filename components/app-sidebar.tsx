@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
 
-import { NavFavorites } from "@/components/nav-favorites";
+// import { NavFavorites } from "@/components/nav-favorites";
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
 // import { NavSecondary } from "@/components/nav-secondary"
@@ -33,8 +33,8 @@ import {
   History,
   ListStart,
   Bookmark,
-  Crown,
-  PencilSparkles,
+  // Crown,
+  // PencilSparkles,
   // AudioWaveform,
   // Blocks,
   // Calendar,
@@ -68,7 +68,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Discovery",
         url: "#",
         icon: <QuotesIcon />,
-        isActive: true,
         items: [
           {
             title: "Timeline",
@@ -136,32 +135,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     navMain: [
       {
         title: "Timeline",
-        url: "#",
+        url: "/timeline",
         icon: ListStart,
       },
       {
-        title: "Bookmark",
-        url: "#",
+        title: "Bookmarks",
+        url: "/bookmarks",
         icon: Bookmark,
       },
       {
         title: "History",
-        url: "#",
+        url: "/history",
         icon: History,
         isActive: true,
       },
-      {
-        title: "Ranked",
-        url: "#",
-        icon: Crown,
-        badge: "10",
-      },
-      {
-        title: "Created",
-        url: "#",
-        icon: PencilSparkles,
-        badge: "10",
-      },
+      // {
+      //   title: "Ranked",
+      //   url: "#",
+      //   icon: Crown,
+      //   badge: "10",
+      // },
+      // {
+      //   title: "Created",
+      //   url: "#",
+      //   icon: PencilSparkles,
+      //   badge: "10",
+      // },
     ],
     favorites: [
       {
@@ -239,8 +238,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data2.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavFavorites favorites={data2.favorites} />
-        <NavFavorites favorites={data2.workspaces} />
+        {/* <NavFavorites favorites={data2.favorites} />
+        <NavFavorites favorites={data2.workspaces} /> */}
         {/* <NavWorkspaces workspaces={data2.workspaces} /> */}
         {/* <NavSecondary items={data2.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
