@@ -13,7 +13,7 @@ interface Work {
   body: string;
   categories: string[];
   writer: {
-    _id: string;
+    id: string;
   };
 }
 
