@@ -4,9 +4,13 @@ import * as React from "react";
 import Link from "next/link";
 import { useAuthStore } from "@/store/authStore";
 
+import { NavFavorites } from "@/components/nav-favorites";
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
+// import { NavSecondary } from "@/components/nav-secondary"
+// import { NavWorkspaces } from "@/components/nav-workspaces";
+// import { NavMain } from "@/components/nav-main";
+// import { NavProjects } from "@/components/nav-projects";
 import {
   Sidebar,
   SidebarMenuButton,
@@ -24,6 +28,24 @@ import {
   UsersIcon,
   QuotesIcon,
 } from "@phosphor-icons/react";
+
+import {
+  History,
+  ListStart,
+  Bookmark,
+  Crown,
+  PencilSparkles,
+  // AudioWaveform,
+  // Blocks,
+  // Calendar,
+  // Command,
+  // Home,
+  // Inbox,
+  // MessageCircleQuestion,
+  // Search,
+  // Settings2,
+  // Sparkles,
+} from "lucide-react";
 
 // This is sample data.
 const brand = {
@@ -49,15 +71,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         isActive: true,
         items: [
           {
-            title: "Followed",
-            url: "#",
-          },
-          {
             title: "Timeline",
             url: "#",
           },
           {
-            title: "Book of Fame",
+            title: "Bookmark",
+            url: "#",
+          },
+          {
+            title: "History",
+            url: "#",
+          },
+          {
+            title: "Rated Works",
             url: "#",
           },
         ],
@@ -106,8 +132,95 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
   };
 
+  const data2 = {
+    navMain: [
+      {
+        title: "Timeline",
+        url: "#",
+        icon: ListStart,
+      },
+      {
+        title: "Bookmark",
+        url: "#",
+        icon: Bookmark,
+      },
+      {
+        title: "History",
+        url: "#",
+        icon: History,
+        isActive: true,
+      },
+      {
+        title: "Ranked",
+        url: "#",
+        icon: Crown,
+        badge: "10",
+      },
+      {
+        title: "Created",
+        url: "#",
+        icon: PencilSparkles,
+        badge: "10",
+      },
+    ],
+    favorites: [
+      {
+        name: "Project Management & Task Tracking",
+        url: "#",
+        emoji: "📊",
+      },
+      {
+        name: "Family Recipe Collection & Meal Planning",
+        url: "#",
+        emoji: "🍳",
+      },
+      {
+        name: "Fitness Tracker & Workout Routines",
+        url: "#",
+        emoji: "💪",
+      },
+      {
+        name: "Book Notes & Reading List",
+        url: "#",
+        emoji: "📚",
+      },
+      {
+        name: "Sustainable Gardening Tips & Plant Care",
+        url: "#",
+        emoji: "🌱",
+      },
+    ],
+    workspaces: [
+      {
+        name: "Project Management & Task Tracking",
+        url: "#",
+        emoji: "📊",
+      },
+      {
+        name: "Family Recipe Collection & Meal Planning",
+        url: "#",
+        emoji: "🍳",
+      },
+      {
+        name: "Fitness Tracker & Workout Routines",
+        url: "#",
+        emoji: "💪",
+      },
+      {
+        name: "Book Notes & Reading List",
+        url: "#",
+        emoji: "📚",
+      },
+      {
+        name: "Sustainable Gardening Tips & Plant Care",
+        url: "#",
+        emoji: "🌱",
+      },
+    ],
+  };
+
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar className="border-r-0" {...props}>
       <SidebarHeader>
         <SidebarMenuButton
           size="lg"
@@ -123,10 +236,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </div>
           </Link>
         </SidebarMenuButton>
+        <NavMain items={data2.navMain} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain}/>
-        <NavProjects projects={data.projects} />
+        <NavFavorites favorites={data2.favorites} />
+        <NavFavorites favorites={data2.workspaces} />
+        {/* <NavWorkspaces workspaces={data2.workspaces} /> */}
+        {/* <NavSecondary items={data2.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
