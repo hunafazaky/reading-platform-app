@@ -16,6 +16,8 @@ interface AuthState {
   setAuth: (accessToken: string, user: User) => void;
   clearAuth: () => void;
   setRefreshing: (status: boolean) => void;
+  // DIUBAH: Menggunakan Partial<Omit<User, "id">> agar lebih fleksibel
+  updateUser: (newData: Partial<Omit<User, "id">>) => void; 
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -27,11 +29,18 @@ export const useAuthStore = create<AuthState>()(
       setAuth: (accessToken, user) => set({ accessToken, user }),
       clearAuth: () => set({ user: null, accessToken: null }),
       setRefreshing: (status) => set({ isRefreshing: status }),
+      updateUser: (newData) =>
+        set((state) => ({
+          // DIPERBAIKI: Pengecekan null-safe sebelum di-spread
+          user: state.user ? { ...state.user, ...newData } : null,
+        })),
     }),
     {
       name: "auth-storage",
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({ user: state.user }),
+      // MANTAP: partialize kamu sudah benar! 
+      // accessToken tidak disimpan di storage (aman di memori).
+      partialize: (state) => ({ user: state.user }), 
     },
   ),
 );

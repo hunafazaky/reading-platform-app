@@ -28,7 +28,7 @@ interface Work {
   body: string;
   categories: string[];
   writer: {
-    _id: string;
+    id: string;
   };
 }
 
@@ -79,7 +79,7 @@ export function CardWork({ work }: { work: Work }) {
             Read
           </Link>
         </Button>
-        {user.id === work.writer._id && (
+        {user.id === work.writer.id && (
           <ButtonGroup aria-label="Button group" className="ml-auto">
             <Button
               asChild

@@ -19,12 +19,13 @@ import {
 import { DialogSignOut } from "@/components/dialog-signout";
 import {
   CaretUpDownIcon,
-  UserGearIcon  
+  UserGearIcon,
   // SparkleIcon,
   // CheckCircleIcon,
   // CreditCardIcon,
   // BellIcon,
 } from "@phosphor-icons/react";
+import Link from "next/link";
 
 export function NavUser({
   user,
@@ -62,10 +63,12 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuItem>
-                <UserGearIcon   />
+            <DropdownMenuItem asChild>
+              <Link href="/usersettings">
+                <UserGearIcon />
                 User Settings
-              </DropdownMenuItem>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             {/* <DropdownMenuGroup>
               <DropdownMenuItem>
